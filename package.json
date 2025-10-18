@@ -1,7 +1,7 @@
 {
   "name": "node-starter",
   "version": "0.0.0",
-  "description": "...",
+  "description": "A helper library for `meow`. Automatically create stylized help text and more.",
   "keywords": [],
   "homepage": "https://github.com/jbenner-radham/node-starter#readme",
   "bugs": {
@@ -32,6 +32,7 @@
   "scripts": {
     "prebuild": "rimraf ./dist",
     "build": "duo-build",
+    "lab": "tsx src/lab.ts",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "prepare": "husky",
@@ -39,6 +40,13 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest"
+  },
+  "dependencies": {
+    "chalk": "^5.6.2",
+    "chalk-pipe": "^6.2.0",
+    "decamelize-keys": "^2.0.1",
+    "is-plain-obj": "^4.1.0",
+    "read-package-up": "^11.0.0"
   },
   "devDependencies": {
     "@eslint/compat": "^1.4.0",
@@ -52,8 +60,11 @@
     "globals": "^16.4.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.4",
+    "meow": "^14.0.0",
     "rimraf": "^6.0.1",
     "sort-package-json": "^3.4.0",
+    "tsx": "^4.20.6",
+    "type-fest": "^5.1.0",
     "typescript": "^5.9.3",
     "vitest": "^3.2.4"
   },

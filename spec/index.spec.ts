@@ -1,8 +1,8 @@
-import lib from '../src/index.js';
+import { getHelpText } from '../src/index.js';
 import { describe, expect, it } from 'vitest';
 
-describe('lib', () => {
+describe('getHelpText', () => {
   it('is a function', () => {
-    expect(lib).toBeTypeOf('function');
+    expect(getHelpText).toBeTypeOf('function');
   });
 });
