@@ -139,14 +139,15 @@ export function getHelpText(config: Config): string {
     `.trim();
   } else {
     const flags = decamelizeKeys(config.flags, { separator: '-' });
-    const flagList = Object.entries(flags).map(([name, meta]) => ({
-      leftColumn: meta.shortFlag
-        ? `${styler.flag('--' + name)}, ${styler.flag('-' + meta.shortFlag)}`
-        : `${styler.flag('--' + name)}`,
-
-      // rightColumn: flagDescriptions[name] ? styleCodeSpans(flagDescriptions[name]) : ''
-      rightColumn: meta.description ? styleCodeSpans(meta.description) : ''
-    }));
+    const flagList = Object.entries(flags)
+      .sort((a, b) =>
+        (a.at(0) as string).localeCompare(b.at(0) as string))
+      .map(([name, meta]) => ({
+        leftColumn: meta.shortFlag
+          ? `${styler.flag('--' + name)}, ${styler.flag('-' + meta.shortFlag)}`
+          : `${styler.flag('--' + name)}`,
+        rightColumn: meta.description ? styleCodeSpans(meta.description) : ''
+      }));
     const longestFlag = Math.max(...flagList.map(({ leftColumn }) => leftColumn.length));
 
     optionsBody = flagList.map(({ leftColumn, rightColumn }, index) =>

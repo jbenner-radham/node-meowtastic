@@ -8,10 +8,15 @@ import meow from 'meow';
 
 const flags: AnyFlagsWithDescriptions = {
   ...getHelpAndVersionFlags(),
+  example: {
+    description: 'An example... yeah!',
+    shortFlag: 'e',
+    type: 'string'
+  },
   yolo: {
     description: 'Do something or invoke `yolo` or something else... Invoke `idk`?',
-    type: 'boolean',
-    shortFlag: 'y'
+    shortFlag: 'y',
+    type: 'boolean'
   }
 };
 const config: Config = {
