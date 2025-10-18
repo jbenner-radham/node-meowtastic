@@ -1,89 +1,77 @@
-import chalk from 'chalk';
+import { getPackageBin, getPackageDescription } from './package.js';
+import chalkPipe from 'chalk-pipe';
 import decamelizeKeys from 'decamelize-keys';
-import isPlainObject from 'is-plain-obj';
 import type { Flag } from 'meow';
+import { EOL } from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import { readPackageUpSync } from 'read-package-up';
 import type { PackageJson } from 'type-fest';
 
-// import chalkPipe from 'chalk-pipe';
-
-// From: https://github.com/sindresorhus/meow/blob/a691341b2f15fbb7cbd654de550871623dda0b40/source/index.d.ts#L108-L112
+// These aren't exported from `meow` for whatever reason. So I just copy/pasted them here.
+// From: https://tinyurl.com/7apyy7bk
 export type StringFlag = Flag<'string', string> | Flag<'string', string[], true>;
 export type BooleanFlag = Flag<'boolean', boolean> | Flag<'boolean', boolean[], true>;
 export type NumberFlag = Flag<'number', number> | Flag<'number', number[], true>;
 export type AnyFlag = StringFlag | BooleanFlag | NumberFlag;
 export type AnyFlags = Record<string, AnyFlag>;
 
+export type AnyFlagWithDescription = AnyFlag & { description: string };
+export type AnyFlagsWithDescriptions = Record<string, AnyFlagWithDescription>;
+
 export type Config = {
-  descriptions?: {
-    flags?: Record<string, string>;
-  };
-  flags?: AnyFlags;
+  flags?: AnyFlagsWithDescriptions;
   importMeta: ImportMeta;
+  includeDescription?: boolean;
+  packageOverride?: PackageJson;
 };
+
+export type TextCase = 'lower' | 'title' | 'upper';
+
+export type Theme = {
+  arguments?: string | [string, TextCase];
+  bin?: string;
+  code?: string;
+  flag?: string;
+  header?: string | [string, TextCase];
+  options?: string | [string, TextCase];
+  promptSymbol?: string;
+};
+
+export type TextCaseThemeProperty = keyof Pick<Theme, 'arguments' | 'header' | 'options'>;
 
 // See: https://no-color.org/
 const NO_COLOR = Boolean(process.env.NO_COLOR);
 
-export function getPackageBin(pkg: PackageJson): string {
-  const isScopedPackage = (name: string): boolean =>
-    name.startsWith('@') &&
-    name.slice(1, name.length - 1).includes('/');
-
-  const getUnscopedPackageName = (name: string): string =>
-    name.slice(name.indexOf('/') + 1);
-
-  if (typeof pkg.bin === 'string' && typeof pkg.name === 'string') {
-    if (isScopedPackage(pkg.name)) {
-      return getUnscopedPackageName(pkg.name);
-    }
-
-    return pkg.name;
-  } else if (isPlainObject(pkg.bin) && Object.keys(pkg.bin).length) {
-    return Object.keys(pkg.bin).at(0)!;
-  }
-
-  return '';
-}
-
-export function getPackageDescription(pkg: PackageJson): string {
-  if (!pkg.description) {
-    return '';
-  }
-
-  if (NO_COLOR) {
-    return pkg.description;
-  }
-
-  return pkg.description
-    .replaceAll(/`[^`]+`/g, match => chalk.bold.white(match.slice(1, match.length - 1)));
-}
-
-export function getHelpAndVersionFlags(): Record<string, BooleanFlag> {
+export function getHelpAndVersionFlags(): AnyFlagsWithDescriptions {
   return {
     help: {
-      type: 'boolean',
-      shortFlag: 'h'
+      description: 'Display this message.',
+      shortFlag: 'h',
+      type: 'boolean'
     },
     version: {
-      type: 'boolean',
-      shortFlag: 'v'
+      description: 'Display the application version.',
+      shortFlag: 'v',
+      type: 'boolean'
     }
   };
 }
 
-export function getDefaultHelpTextTheme() {
+export function getDefaultHelpTextTheme(): Theme {
   return {
+    arguments: ['', 'upper'],
     bin: 'bold',
-    flag: '#00fd6a',
-    header: 'bold.white', // Or 'bold.#66ecff'?! IDK?
-    options: 'dim',
+    code: 'bold',
+    flag: 'bold',
+    header: ['bold', 'title'],
+    options: ['dim', 'upper'],
     promptSymbol: 'dim'
   };
 }
+
+const TEXT_CASE_THEME_PROPERTIES: TextCaseThemeProperty[] = ['arguments', 'header', 'options'];
 
 export function getHelpText(config: Config): string {
   const pkg = readPackageUpSync({
@@ -91,73 +79,94 @@ export function getHelpText(config: Config): string {
     normalize: false
   })?.packageJson ?? {};
 
-  pkg.bin = { meowtastic: 'path/dne' };
+  if (config.packageOverride) {
+    Object.entries(config.packageOverride).forEach(([key, value]) => {
+      pkg[key as keyof PackageJson] = value;
+    });
+  }
 
   const bin = getPackageBin(pkg);
-  const description = getPackageDescription(pkg);
-  const flagDescriptions = decamelizeKeys(config.descriptions?.flags ?? {}, { separator: '-' });
 
   if (!bin) {
     throw new Error('Could not determine the name of the CLI app binary');
   }
 
-  // const passthrough = (value: string) => value;
-  // const bold = NO_COLOR ? passthrough : chalk.bold;
+  const theme = getDefaultHelpTextTheme();
+  const styler = Object.entries(theme).reduce((accumulator, [key, value]) => {
+    const supportsTextCasing = TEXT_CASE_THEME_PROPERTIES
+      .includes(key as TextCaseThemeProperty);
+    const textCase = supportsTextCasing && Array.isArray(value) && value.length === 2
+      ? value.at(1)!
+      : null;
+    const style = Array.isArray(value) ? value.at(0)! : value;
 
+    const compose = <T>(...functions: Array<(value: T) => T>) => {
+      return (value: T) => functions.reduce((accumulator, fn) => fn(accumulator), value);
+    };
+
+    const transformTextCase = (text: string): string => {
+      switch (textCase) {
+        case 'lower':
+          return text.toLowerCase();
+        case 'upper':
+          return text.toUpperCase();
+        default:
+          return text;
+      }
+    };
+
+    return {
+      ...accumulator,
+      [key]: NO_COLOR || style === ''
+        ? transformTextCase
+        : compose(transformTextCase, chalkPipe(style))
+    };
+  }, {} as Record<keyof typeof theme, (value: string) => string>);
+
+  const styleCodeSpans = (text: string): string => {
+    return text.replaceAll(/`[^`]+`/g, match => styler.code(match.slice(1, -1)));
+  };
+
+  const { includeDescription = false } = config;
+  const description = includeDescription ? styleCodeSpans(getPackageDescription(pkg)) : '';
   let optionsBody = '';
 
   if (!config.flags || Object.keys(config.flags).length === 0) {
     // #fffb68
     optionsBody = `
-      ${chalk.hex('#00fd6a')('--help')}     Display this message.
-      ${chalk.hex('#00fd6a')('--version')}  Display the application version.
+      ${styler.flag('--help')}     Display this message.
+      ${styler.flag('--version')}  Display the application version.
     `.trim();
   } else {
     const flags = decamelizeKeys(config.flags, { separator: '-' });
-
-    // const optionsList = [];
-    // const longestFlag = Math.max(...Object.entries(flags).map(([name, meta]) => {
-    //   return (meta.shortFlag ? `--${name}, -${meta.shortFlag}` : `--${name}`).length;
-    // }));
-    // const flagList = Object.entries(flags).map(([name, meta]) => {
-    //   return (
-    //     meta.shortFlag
-    //       ? `${chalk.hex('#00fd6a')('--' + name)}, ${chalk.hex('#00fd6a')('-' + meta.shortFlag)}`
-    //       : `${chalk.hex('#00fd6a')('--' + name)}`
-    //   );
-    // });
-
-    // optionsBody = flagList.map((flag, index) =>
-    //   index === 0 ? flag : ' '.repeat(6) + flag).join('\n');
-
     const flagList = Object.entries(flags).map(([name, meta]) => ({
       leftColumn: meta.shortFlag
-        ? `${chalk.hex('#00fd6a')('--' + name)}, ${chalk.hex('#00fd6a')('-' + meta.shortFlag)}`
-        : `${chalk.hex('#00fd6a')('--' + name)}`,
-      rightColumn: flagDescriptions[name] ?? ''
+        ? `${styler.flag('--' + name)}, ${styler.flag('-' + meta.shortFlag)}`
+        : `${styler.flag('--' + name)}`,
+
+      // rightColumn: flagDescriptions[name] ? styleCodeSpans(flagDescriptions[name]) : ''
+      rightColumn: meta.description ? styleCodeSpans(meta.description) : ''
     }));
     const longestFlag = Math.max(...flagList.map(({ leftColumn }) => leftColumn.length));
 
-    // console.debug({ longestFlag, firstLength: flagList[0].leftColumn.length });
     optionsBody = flagList.map(({ leftColumn, rightColumn }, index) =>
       index === 0
         ? leftColumn.padEnd(longestFlag) + '  ' + rightColumn
-        : ' '.repeat(6) + leftColumn.padEnd(longestFlag) + '  ' + rightColumn
-    ).join('\n');
-
-    // console.debug({ descriptions: flagDescriptions });
+        : ' '.repeat(2) + leftColumn.padEnd(longestFlag) + '  ' + rightColumn
+    ).join(EOL);
   }
 
-  // return `
-  //   ${chalk.bold.hex('#6BCB63')(bin)} [options]
-  // `;
-  return `
-    ${description}
+  const helpLines = [
+    styler.header('Usage'),
+    `  ${styler.promptSymbol('$')} ${styler.bin(bin)} ${styler.options('[OPTIONS]')}`,
+    '',
+    styler.header('Options'),
+    `  ${optionsBody}`
+  ];
 
-    ${chalk.bold.white('Usage')}
-      ${chalk.dim('$')} ${chalk.bold.hex('#00fd6a')(bin)} ${chalk.dim('[OPTIONS]')}
+  if (includeDescription) {
+    helpLines.unshift(description, '');
+  }
 
-    ${chalk.bold.hex('#66ecff')('Options')}
-      ${optionsBody}
-  `;
+  return helpLines.join(EOL);
 }

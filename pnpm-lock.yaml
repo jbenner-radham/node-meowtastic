@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      chalk:
-        specifier: ^5.6.2
-        version: 5.6.2
       chalk-pipe:
         specifier: ^6.2.0
         version: 6.2.0
@@ -43,8 +40,8 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.18.8)(tsx@4.20.6)(yaml@2.8.1))
       duo-build:
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.2.1
+        version: 0.2.1
       eslint:
         specifier: ^9.37.0
         version: 9.37.0
@@ -821,8 +818,8 @@ packages:
   devlop@1.1.0:
     resolution: {integrity: sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==}
 
-  duo-build@0.2.0:
-    resolution: {integrity: sha512-J3I2cvfnEZMgI1QGvxrtbVAJ4ndOptX7jVRDlqUmvkeLkWx/wsxTvdYaxOwBxwnYoRx9jmlHQvjcOPy7FgM4Ww==}
+  duo-build@0.2.1:
+    resolution: {integrity: sha512-eTCvRyQLHQCPWnrgq6+9PWiidT5x9EybIAuM0G+g0dUxXBGLeXAyMS2yRdeEXg3SBLCPYtkQV9ulVeCX2SQL+A==}
     engines: {node: '>=22'}
     hasBin: true
 
@@ -2506,7 +2503,7 @@ snapshots:
     dependencies:
       dequal: 2.0.3
 
-  duo-build@0.2.0:
+  duo-build@0.2.1:
     dependencies:
       esbuild: 0.25.11
       execa: 9.6.0

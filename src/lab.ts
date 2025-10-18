@@ -1,16 +1,30 @@
-import { getHelpAndVersionFlags, getHelpText } from './index.js';
+import {
+  type AnyFlagsWithDescriptions,
+  type Config,
+  getHelpAndVersionFlags,
+  getHelpText
+} from './index.js';
 import meow from 'meow';
 
-const descriptions = {
-  flags: {
-    help: 'Display this message.',
-    version: 'Display the application version.'
+const flags: AnyFlagsWithDescriptions = {
+  ...getHelpAndVersionFlags(),
+  yolo: {
+    description: 'Do something or invoke `yolo` or something else... Invoke `idk`?',
+    type: 'boolean',
+    shortFlag: 'y'
   }
 };
-const flags = getHelpAndVersionFlags();
+const config: Config = {
+  flags,
+  importMeta: import.meta,
+  includeDescription: true,
+  packageOverride: {
+    bin: { meowtastic: 'path/to/bin' }
+  }
+};
 
 meow(
-  getHelpText({ descriptions, flags, importMeta: import.meta }),
+  getHelpText(config),
   {
     description: false,
     flags,

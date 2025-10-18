@@ -1,5 +1,5 @@
 {
-  "name": "node-starter",
+  "name": "meowtastic",
   "version": "0.0.0",
   "description": "A helper library for `meow`. Automatically create stylized help text and more.",
   "keywords": [],
@@ -42,7 +42,6 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "chalk": "^5.6.2",
     "chalk-pipe": "^6.2.0",
     "decamelize-keys": "^2.0.1",
     "is-plain-obj": "^4.1.0",
@@ -55,7 +54,7 @@
     "@radham/eslint-config": "^7.0.0",
     "@types/node": "^22.18.8",
     "@vitest/coverage-v8": "^3.2.4",
-    "duo-build": "^0.2.0",
+    "duo-build": "^0.2.1",
     "eslint": "^9.37.0",
     "globals": "^16.4.0",
     "husky": "^9.1.7",
