@@ -7,6 +7,15 @@ text and more.
 
 ![Example of the meowtastic help text output.](images/example.png)
 
+Features
+--------
+
+- Automatically styles Markdown code spans.
+- Displays a usage example which can be customized.
+- Lists all available flags in alphabetical order. Displays descriptions as well if specified.
+- Is easily themeable.
+- Provides optional descriptions and short flags for the `help` and `version` flags.
+- Supports the [`NO_COLOR`](https://no-color.org/) environment variable standard.
 
 Install
 -------
@@ -27,10 +36,15 @@ import {
 
 const flags: AnyFlagsWithDescriptions = {
   ...getHelpAndVersionFlags(), // <- Add a description and short flag for `help` and `version`.
+  example: {
+    description: 'An example... yeah!',
+    shortFlag: 'e',
+    type: 'string'
+  },
   yolo: {
     description: 'Do something or invoke `yolo` or something else... Invoke `idk`?',
-    type: 'boolean',
-    shortFlag: 'y'
+    shortFlag: 'y',
+    type: 'boolean'
   }
 };
 
