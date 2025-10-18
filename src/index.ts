@@ -42,7 +42,13 @@ export type Theme = {
 export type TextCaseThemeProperty = keyof Pick<Theme, 'arguments' | 'header' | 'options'>;
 
 // See: https://no-color.org/
-const NO_COLOR = Boolean(process.env.NO_COLOR);
+export const NO_COLOR = Boolean(process.env.NO_COLOR);
+
+export const MAX_TERMINAL_COLUMNS_COUNT = 80;
+
+export const OPTIONS_SECTION_INDENT_SPACES_COUNT = 2;
+
+export const OPTIONS_SECTION_SEPARATOR_SPACES_COUNT = 2;
 
 export function getHelpAndVersionFlags(): AnyFlagsWithDescriptions {
   return {
@@ -150,11 +156,94 @@ export function getHelpText(config: Config): string {
       }));
     const longestFlag = Math.max(...flagList.map(({ leftColumn }) => leftColumn.length));
 
-    optionsBody = flagList.map(({ leftColumn, rightColumn }, index) =>
-      index === 0
-        ? leftColumn.padEnd(longestFlag) + '  ' + rightColumn
-        : ' '.repeat(2) + leftColumn.padEnd(longestFlag) + '  ' + rightColumn
-    ).join(EOL);
+    // const longestFlagLength = Math.max(
+    //   ...Object.entries(flags).map(([name, meta]) =>
+    //     meta.shortFlag
+    //       ? `--${name}, -${meta.shortFlag}`.length
+    //       : `--${name}`.length
+    //   )
+    // );
+    // console.debug({ flags });
+    // const flagList = Object.entries(flags)
+    //   .sort((a, b) =>
+    //     (a.at(0) as string).localeCompare(b.at(0) as string))
+    //   .map(([name, meta]) => {
+    //     const pattern = /^(?<flag>--[^, ]+)(?:, (?<shortFlag>-[^ ]+))? {2,}(?<description>.+)/;
+    //     // console.debug({ shortFlag: meta.shortFlag });
+    //     // const text = wrapOptionsTextIfNeeded(
+    //     //   longestFlagLength,
+    //   `--${name}${meta.shortFlag ? `, -${meta.shortFlag}` : ''}`.padEnd(longestFlagLength) +
+    //   ' '.repeat(OPTIONS_SECTION_SEPARATOR_SPACES_COUNT) +
+    //     //   `${meta.description ?? ''}`
+    //     // );
+    //     const text = wrapOptionsTextIfNeeded(
+    //       longestFlagLength,
+    //       meta.shortFlag
+    //         ? `--${name}, -${meta.shortFlag}`.padEnd(longestFlagLength) +
+    //           ' '.repeat(OPTIONS_SECTION_SEPARATOR_SPACES_COUNT) +
+    //           (meta.description ?? '')
+    //         : `--${name}`.padEnd(longestFlagLength) +
+    //           ' '.repeat(OPTIONS_SECTION_SEPARATOR_SPACES_COUNT) +
+    //           (meta.description ?? '')
+    //     );
+    //     // console.debug(typeof meta.description);
+    //     // console.debug(text);
+    //     const { flag, shortFlag, description } = pattern.exec(text)?.groups ?? {};
+    //     // console.debug({ flag, shortFlag, description });
+    //     // console.debug({ description });
+    //     // console.debug({ flag, styledFlag: styler.flag(flag!) });
+    //     // console.log(styler.flag(flag!));
+    //     const firstLine = shortFlag
+    //       // eslint-disable-next-line @stylistic/multiline-ternary
+    //       ? `${styler.flag(flag!)}, ${styler.flag(shortFlag)}`.padEnd(longestFlagLength) +
+    //         ' '.repeat(OPTIONS_SECTION_SEPARATOR_SPACES_COUNT) +
+    //         // eslint-disable-next-line @stylistic/multiline-ternary
+    //         // description ? styleCodeSpans(description!) : ''
+    //         (description ?? '')
+    //       // eslint-disable-next-line @stylistic/multiline-ternary
+    //       : `${styler.flag(flag!)}`.padEnd(longestFlagLength) +
+    //         ' '.repeat(OPTIONS_SECTION_SEPARATOR_SPACES_COUNT) +
+    //         // eslint-disable-next-line @stylistic/multiline-ternary
+    //         // description ? styleCodeSpans(description!) : '';
+    //         (description ?? '');
+    //
+    //     // return firstLine;
+    //     return [firstLine, ...text.split(EOL).slice(1)].join(EOL);
+    //     // return text.split(EOL);
+    //     // return text;
+    //     // return {
+    //     //   leftColumn: meta.shortFlag
+    //     //     ? `${styler.flag('--' + name)}, ${styler.flag('-' + meta.shortFlag)}`
+    //     //     : `${styler.flag('--' + name)}`,
+    //     //   rightColumn: meta.description ? styleCodeSpans(meta.description) : ''
+    //     // };
+    //   });
+
+    // console.debug(flagList);
+    // optionsBody = flagList.map((flag, index) => {
+    //   return index === 0
+    //     ? flag
+    //     : ' '.repeat(OPTIONS_SECTION_INDENT_SPACES_COUNT) + flag;
+    // }).join(EOL);
+
+    // optionsBody = flagList.map(({ leftColumn, rightColumn }, index) =>
+    //   wrapOptionsTextIfNeeded(
+    //     longestFlagVisibleLength,
+    //     index === 0
+    //       ? leftColumn.padEnd(longestFlag) + '  ' + rightColumn
+    //       : ' '.repeat(2) + leftColumn.padEnd(longestFlag) + '  ' + rightColumn
+    //   )
+    // ).join(EOL);
+    optionsBody = flagList.map(({ leftColumn, rightColumn }, index) => {
+      return index === 0
+        ? leftColumn.padEnd(longestFlag) +
+          ' '.repeat(OPTIONS_SECTION_SEPARATOR_SPACES_COUNT) +
+          rightColumn
+        : ' '.repeat(OPTIONS_SECTION_INDENT_SPACES_COUNT) +
+          leftColumn.padEnd(longestFlag) +
+          ' '.repeat(OPTIONS_SECTION_SEPARATOR_SPACES_COUNT) +
+          rightColumn;
+    }).join(EOL);
   }
 
   const helpLines = [
