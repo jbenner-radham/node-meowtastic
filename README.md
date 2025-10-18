@@ -4,6 +4,10 @@ meowtastic
 A helper library for [meow](https://www.npmjs.com/package/meow). Automatically create stylized help
 text and more.
 
+
+![Example of the meowtastic help text output.](images/example.png)
+
+
 Install
 -------
 
