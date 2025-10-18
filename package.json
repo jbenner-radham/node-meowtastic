@@ -39,7 +39,7 @@
   ],
   "scripts": {
     "prebuild": "rimraf ./dist",
-    "build": "duo-build",
+    "build": "duo-build --platform node",
     "lab": "tsx src/lab.ts",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
