@@ -1,5 +1,5 @@
 import {
-  MAX_TERMINAL_COLUMNS_COUNT, OPTIONS_SECTION_INDENT_SPACES_COUNT,
+  INDENT_SPACES_COUNT, MAX_TERMINAL_COLUMNS_COUNT,
   OPTIONS_SECTION_SEPARATOR_SPACES_COUNT
 } from '../src';
 import { wrapOptionsTextIfNeeded, wrapTextIfNeeded } from '../src/wrap-text.js';
@@ -50,7 +50,7 @@ describe('wrapOptionsTextIfNeeded', () => {
     const longestFlagLength = flag.length;
     const lorem = 'Lorem ipsum dolor sit amet consectetur adipiscing elit quisque faucibus ex' +
       ' sapien vitae pellentesque sem.';
-    const text = ' '.repeat(OPTIONS_SECTION_INDENT_SPACES_COUNT) +
+    const text = ' '.repeat(INDENT_SPACES_COUNT) +
       flag +
       ' '.repeat(OPTIONS_SECTION_SEPARATOR_SPACES_COUNT) +
       lorem;
@@ -67,7 +67,7 @@ describe('wrapOptionsTextIfNeeded', () => {
       ' sapien vitae pellentesque sem placerat in id cursus mi pretium tellus duis convallis' +
       ' tempus leo eu aenean sed diam urna tempor pulvinar vivamus fringilla lacus nec metus' +
       ' bibendum egestas iaculis massa nisl malesuada lacinia.';
-    const text = ' '.repeat(OPTIONS_SECTION_INDENT_SPACES_COUNT) +
+    const text = ' '.repeat(INDENT_SPACES_COUNT) +
       flag +
       ' '.repeat(OPTIONS_SECTION_SEPARATOR_SPACES_COUNT) +
       lorem;

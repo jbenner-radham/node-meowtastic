@@ -20,10 +20,14 @@ const flags: AnyFlagsWithDescriptions = {
   }
 };
 const config: Config = {
+  arguments: [
+    { name: 'file', required: true },
+    { name: 'additional files...' }
+  ],
   flags,
   importMeta: import.meta,
   includeDescription: true,
-  packageOverride: {
+  packageOverrides: {
     bin: { meowtastic: 'path/to/bin' }
   }
 };

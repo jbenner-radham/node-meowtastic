@@ -1,5 +1,6 @@
 import { getPackageBin, getPackageDescription } from './package.js';
 import chalkPipe from 'chalk-pipe';
+import decamelize from 'decamelize';
 import decamelizeKeys from 'decamelize-keys';
 import type { Flag } from 'meow';
 import { EOL } from 'node:os';
@@ -17,36 +18,39 @@ export type NumberFlag = Flag<'number', number> | Flag<'number', number[], true>
 export type AnyFlag = StringFlag | BooleanFlag | NumberFlag;
 export type AnyFlags = Record<string, AnyFlag>;
 
+export type Argument = { name: string; required?: boolean };
+
 export type AnyFlagWithDescription = AnyFlag & { description: string };
 export type AnyFlagsWithDescriptions = Record<string, AnyFlagWithDescription>;
 
 export type Config = {
+  arguments?: Argument[];
   flags?: AnyFlagsWithDescriptions;
   importMeta: ImportMeta;
   includeDescription?: boolean;
-  packageOverride?: PackageJson;
+  packageOverrides?: PackageJson;
 };
 
 export type TextCase = 'lower' | 'title' | 'upper';
 
 export type Theme = {
-  arguments?: string | [string, TextCase];
+  argument?: string | [string, TextCase];
   bin?: string;
   code?: string;
   flag?: string;
   header?: string | [string, TextCase];
-  options?: string | [string, TextCase];
+  option?: string | [string, TextCase];
   promptSymbol?: string;
 };
 
-export type TextCaseThemeProperty = keyof Pick<Theme, 'arguments' | 'header' | 'options'>;
+export type TextCaseThemeProperty = keyof Pick<Theme, 'argument' | 'header' | 'option'>;
 
 // See: https://no-color.org/
 export const NO_COLOR = Boolean(process.env.NO_COLOR);
 
 export const MAX_TERMINAL_COLUMNS_COUNT = 80;
 
-export const OPTIONS_SECTION_INDENT_SPACES_COUNT = 2;
+export const INDENT_SPACES_COUNT = 2;
 
 export const OPTIONS_SECTION_SEPARATOR_SPACES_COUNT = 2;
 
@@ -67,17 +71,17 @@ export function getHelpAndVersionFlags(): AnyFlagsWithDescriptions {
 
 export function getDefaultHelpTextTheme(): Theme {
   return {
-    arguments: ['', 'upper'],
+    argument: ['', 'upper'],
     bin: 'bold',
     code: 'bold',
     flag: 'bold',
     header: ['bold', 'title'],
-    options: ['dim', 'upper'],
+    option: ['dim', 'upper'],
     promptSymbol: 'dim'
   };
 }
 
-const TEXT_CASE_THEME_PROPERTIES: TextCaseThemeProperty[] = ['arguments', 'header', 'options'];
+const TEXT_CASE_THEME_PROPERTIES: TextCaseThemeProperty[] = ['argument', 'header', 'option'];
 
 export function getHelpText(config: Config): string {
   const pkg = readPackageUpSync({
@@ -85,8 +89,8 @@ export function getHelpText(config: Config): string {
     normalize: false
   })?.packageJson ?? {};
 
-  if (config.packageOverride) {
-    Object.entries(config.packageOverride).forEach(([key, value]) => {
+  if (config.packageOverrides) {
+    Object.entries(config.packageOverrides).forEach(([key, value]) => {
       pkg[key as keyof PackageJson] = value;
     });
   }
@@ -114,6 +118,11 @@ export function getHelpText(config: Config): string {
       switch (textCase) {
         case 'lower':
           return text.toLowerCase();
+        case 'title':
+          return decamelize(text, { separator: ' ' })
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
         case 'upper':
           return text.toUpperCase();
         default:
@@ -135,6 +144,21 @@ export function getHelpText(config: Config): string {
 
   const { includeDescription = false } = config;
   const description = includeDescription ? styleCodeSpans(getPackageDescription(pkg)) : '';
+
+  let usageBody = ' '.repeat(INDENT_SPACES_COUNT) +
+    `${styler.promptSymbol('$')} ${styler.bin(bin)} ${styler.option('[OPTIONS]')}`;
+
+  const args = config.arguments ?? [];
+
+  if (args.length) {
+    const formattedArguments = args.map(arg =>
+      arg.required
+        ? styler.argument(`<${arg.name}>`)
+        : styler.option(`[${arg.name}]`)
+    );
+    usageBody += ` ${formattedArguments.join(' ')}`;
+  }
+
   let optionsBody = '';
 
   if (!config.flags || Object.keys(config.flags).length === 0) {
@@ -223,7 +247,7 @@ export function getHelpText(config: Config): string {
     // optionsBody = flagList.map((flag, index) => {
     //   return index === 0
     //     ? flag
-    //     : ' '.repeat(OPTIONS_SECTION_INDENT_SPACES_COUNT) + flag;
+    //     : ' '.repeat(INDENT_SPACES_COUNT) + flag;
     // }).join(EOL);
 
     // optionsBody = flagList.map(({ leftColumn, rightColumn }, index) =>
@@ -239,7 +263,7 @@ export function getHelpText(config: Config): string {
         ? leftColumn.padEnd(longestFlag) +
           ' '.repeat(OPTIONS_SECTION_SEPARATOR_SPACES_COUNT) +
           rightColumn
-        : ' '.repeat(OPTIONS_SECTION_INDENT_SPACES_COUNT) +
+        : ' '.repeat(INDENT_SPACES_COUNT) +
           leftColumn.padEnd(longestFlag) +
           ' '.repeat(OPTIONS_SECTION_SEPARATOR_SPACES_COUNT) +
           rightColumn;
@@ -248,7 +272,7 @@ export function getHelpText(config: Config): string {
 
   const helpLines = [
     styler.header('Usage'),
-    `  ${styler.promptSymbol('$')} ${styler.bin(bin)} ${styler.options('[OPTIONS]')}`,
+    usageBody,
     '',
     styler.header('Options'),
     `  ${optionsBody}`

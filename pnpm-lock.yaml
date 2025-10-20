@@ -11,6 +11,9 @@ importers:
       chalk-pipe:
         specifier: ^6.2.0
         version: 6.2.0
+      decamelize:
+        specifier: ^6.0.1
+        version: 6.0.1
       decamelize-keys:
         specifier: ^2.0.1
         version: 2.0.1

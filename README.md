@@ -4,7 +4,6 @@ meowtastic
 A helper library for [meow](https://www.npmjs.com/package/meow). Automatically create stylized help
 text and more.
 
-
 ![Example of the meowtastic help text output.](images/example.png)
 
 Features
@@ -35,7 +34,7 @@ import {
 } from 'meowtastic';
 
 const flags: AnyFlagsWithDescriptions = {
-  ...getHelpAndVersionFlags(), // <- Add a description and short flag for `help` and `version`.
+  ...getHelpAndVersionFlags(), // <- Add a description and short flag to `help` and `version`.
   example: {
     description: 'An example... yeah!',
     shortFlag: 'e',
@@ -52,7 +51,7 @@ const config: Config = {
   flags,
   importMeta: import.meta,
   includeDescription: true,
-  packageOverride: {
+  packageOverrides: {
     bin: { meowtastic: 'path/to/bin' }
   }
 };

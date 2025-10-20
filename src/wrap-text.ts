@@ -1,7 +1,7 @@
 import {
+  INDENT_SPACES_COUNT,
   MAX_TERMINAL_COLUMNS_COUNT,
   NO_COLOR,
-  OPTIONS_SECTION_INDENT_SPACES_COUNT,
   OPTIONS_SECTION_SEPARATOR_SPACES_COUNT
 } from './index.js';
 import { EOL } from 'node:os';
@@ -84,7 +84,7 @@ export function wrapTextIfNeeded(
 export function wrapOptionsTextIfNeeded(longestFlagLength: number, text: string): string {
   const reservedCharCount = (
     longestFlagLength +
-    OPTIONS_SECTION_INDENT_SPACES_COUNT +
+    INDENT_SPACES_COUNT +
     OPTIONS_SECTION_SEPARATOR_SPACES_COUNT
   );
 
