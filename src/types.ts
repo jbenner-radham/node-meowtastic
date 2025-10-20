@@ -21,13 +21,13 @@ export type Config = {
   packageOverrides?: PackageJson;
 };
 
-// All these cases are exactly like they sound, except for "title". It's a faux titlecase format in
-// which the first letter of each word is capitalized.
+// All these cases are exactly like they sound, except for "title". It's a faux titlecase format
+// in which the first letter of each word is capitalized.
 export type TextCase = 'lower' | 'title' | 'upper';
 
 // All the `string` types below can accept a string in the form of anything accepted by
-// [chalk-pipe](https://www.npmjs.com/package/chalk-pipe) for formatting. Of note, if you do not
-// want to use any styling, you can pass an empty string.
+// [chalk-pipe](https://www.npmjs.com/package/chalk-pipe) for formatting. Of note, if you do
+// not want to use any styling, you can pass an empty string.
 export type Theme = {
   // Required arguments displayed in the usage section.
   argument?: string | [string, TextCase];
