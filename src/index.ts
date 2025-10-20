@@ -127,7 +127,7 @@ export function getHelpText(config: Config): string {
         ? transformTextCase
         : compose(transformTextCase, chalkPipe(style))
     };
-  }, {} as Record<keyof typeof theme, (value: string) => string>);
+  }, {} as Record<keyof Theme, (value: string) => string>);
 
   const styleCodeSpans = (text: string): string => {
     return text.replaceAll(/`[^`]+`/g, match => styler.code(match.slice(1, -1)));
