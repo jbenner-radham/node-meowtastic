@@ -1,7 +1,8 @@
 import {
-  INDENT_SPACES_COUNT, MAX_TERMINAL_COLUMNS_COUNT,
+  INDENT_SPACES_COUNT,
+  MAX_TERMINAL_COLUMNS_COUNT,
   OPTIONS_SECTION_SEPARATOR_SPACES_COUNT
-} from '../src';
+} from '../src/constants.js';
 import { wrapOptionsTextIfNeeded, wrapTextIfNeeded } from '../src/wrap-text.js';
 import { EOL } from 'node:os';
 import { describe, expect, it } from 'vitest';
@@ -73,7 +74,7 @@ describe('wrapOptionsTextIfNeeded', () => {
       lorem;
     const wrapped = wrapOptionsTextIfNeeded(longestFlagLength, text);
     const maxLength = Math.max(...wrapped.split(EOL).map(line => line.length));
-    console.debug(wrapped);
+
     expect(maxLength).toBeLessThanOrEqual(MAX_TERMINAL_COLUMNS_COUNT);
   });
 });

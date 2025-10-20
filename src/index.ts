@@ -1,60 +1,36 @@
+import {
+  INDENT_SPACES_COUNT,
+  NO_COLOR,
+  OPTIONS_SECTION_SEPARATOR_SPACES_COUNT,
+  TEXT_CASE_THEME_PROPERTIES
+} from './constants.js';
+import defaultTheme from './default-theme.js';
 import { getPackageBin, getPackageDescription } from './package.js';
+import type {
+  Argument,
+  Config,
+  Flag,
+  Flags,
+  TextCase,
+  TextCaseThemeProperty,
+  Theme
+} from './types.js';
 import chalkPipe from 'chalk-pipe';
 import decamelize from 'decamelize';
 import decamelizeKeys from 'decamelize-keys';
-import type { Flag } from 'meow';
 import { EOL } from 'node:os';
 import path from 'node:path';
-import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import { readPackageUpSync } from 'read-package-up';
 import type { PackageJson } from 'type-fest';
 
-// These aren't exported from `meow` for whatever reason. So I just copy/pasted them here.
-// From: https://tinyurl.com/7apyy7bk
-export type StringFlag = Flag<'string', string> | Flag<'string', string[], true>;
-export type BooleanFlag = Flag<'boolean', boolean> | Flag<'boolean', boolean[], true>;
-export type NumberFlag = Flag<'number', number> | Flag<'number', number[], true>;
-export type AnyFlag = StringFlag | BooleanFlag | NumberFlag;
-export type AnyFlags = Record<string, AnyFlag>;
+export type { Argument, Config, Flag, Flags, TextCase, TextCaseThemeProperty, Theme };
 
-export type Argument = { name: string; required?: boolean };
+export function getDefaultHelpTextTheme(): Theme {
+  return { ...defaultTheme };
+}
 
-export type AnyFlagWithDescription = AnyFlag & { description: string };
-export type AnyFlagsWithDescriptions = Record<string, AnyFlagWithDescription>;
-
-export type Config = {
-  arguments?: Argument[];
-  flags?: AnyFlagsWithDescriptions;
-  importMeta: ImportMeta;
-  includeDescription?: boolean;
-  packageOverrides?: PackageJson;
-};
-
-export type TextCase = 'lower' | 'title' | 'upper';
-
-export type Theme = {
-  argument?: string | [string, TextCase];
-  bin?: string;
-  code?: string;
-  flag?: string;
-  header?: string | [string, TextCase];
-  option?: string | [string, TextCase];
-  promptSymbol?: string;
-};
-
-export type TextCaseThemeProperty = keyof Pick<Theme, 'argument' | 'header' | 'option'>;
-
-// See: https://no-color.org/
-export const NO_COLOR = Boolean(process.env.NO_COLOR);
-
-export const MAX_TERMINAL_COLUMNS_COUNT = 80;
-
-export const INDENT_SPACES_COUNT = 2;
-
-export const OPTIONS_SECTION_SEPARATOR_SPACES_COUNT = 2;
-
-export function getHelpAndVersionFlags(): AnyFlagsWithDescriptions {
+export function getHelpAndVersionFlags(): Flags {
   return {
     help: {
       description: 'Display this message.',
@@ -68,20 +44,6 @@ export function getHelpAndVersionFlags(): AnyFlagsWithDescriptions {
     }
   };
 }
-
-export function getDefaultHelpTextTheme(): Theme {
-  return {
-    argument: ['', 'upper'],
-    bin: 'bold',
-    code: 'bold',
-    flag: 'bold',
-    header: ['bold', 'title'],
-    option: ['', 'upper'],
-    promptSymbol: 'dim'
-  };
-}
-
-const TEXT_CASE_THEME_PROPERTIES: TextCaseThemeProperty[] = ['argument', 'header', 'option'];
 
 export function getHelpText(config: Config): string {
   const pkg = readPackageUpSync({

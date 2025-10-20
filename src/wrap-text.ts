@@ -3,7 +3,7 @@ import {
   MAX_TERMINAL_COLUMNS_COUNT,
   NO_COLOR,
   OPTIONS_SECTION_SEPARATOR_SPACES_COUNT
-} from './index.js';
+} from './constants.js';
 import { EOL } from 'node:os';
 
 function getTextLength(text: string): number {
