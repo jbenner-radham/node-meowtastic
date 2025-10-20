@@ -1,12 +1,12 @@
 import {
-  type AnyFlagsWithDescriptions,
   type Config,
+  type Flags,
   getHelpAndVersionFlags,
   getHelpText
 } from './index.js';
 import meow from 'meow';
 
-const flags: AnyFlagsWithDescriptions = {
+const flags: Flags = {
   ...getHelpAndVersionFlags(),
   example: {
     description: 'An example... yeah!',
