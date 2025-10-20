@@ -104,11 +104,15 @@ export function getHelpText(config: Config): string {
     return text.replaceAll(/`[^`]+`/g, match => styler.code(match.slice(1, -1)));
   };
 
-  const { includeDescription = false } = config;
+  const { includeDescription = false, includeOptionsArgument = true } = config;
   const description = includeDescription ? styleCodeSpans(getPackageDescription(pkg)) : '';
 
   let usageBody = ' '.repeat(INDENT_SPACES_COUNT) +
-    `${styler.promptSymbol('$')} ${styler.bin(bin)} ${styler.option('[OPTIONS]')}`;
+    `${styler.promptSymbol('$')} ${styler.bin(bin)}`;
+
+  if (includeOptionsArgument) {
+    usageBody += ` ${styler.option('[OPTIONS]')}`;
+  }
 
   const args = config.arguments ?? [];
 
@@ -124,7 +128,6 @@ export function getHelpText(config: Config): string {
   let optionsBody = '';
 
   if (!config.flags || Object.keys(config.flags).length === 0) {
-    // #fffb68
     optionsBody = `
       ${styler.flag('--help')}     Display this message.
       ${styler.flag('--version')}  Display the application version.

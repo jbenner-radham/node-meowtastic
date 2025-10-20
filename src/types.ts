@@ -17,6 +17,7 @@ export type Config = {
   flags?: Flags;
   importMeta: ImportMeta;
   includeDescription?: boolean;
+  includeOptionsArgument?: boolean;
   packageOverrides?: PackageJson;
 };
 
