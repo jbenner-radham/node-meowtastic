@@ -53,28 +53,7 @@ export function wrapTextIfNeeded(
     }
   }
 
-  // const lines = buffer.map((line, index) => {
-  //   return `${index} - ` + (index === 0
-  //     ? line.join(' ')
-  //     : ' '.repeat(reservedCharCount) + line.join(' '));
-  // });
-
-  // const lines = buffer.map((words, index) => {
-  //   return `${index} - ` + (index === 0
-  //     ? words.join(' ')
-  //     : ' '.repeat(reservedCharCount) + words.join(' '));
-  // });
-
-  // console.debug(typeof lines.at(0));
-  // console.debug(lines.at(0));
-  // console.debug({ length: buffer.length });
-  // console.debug(buffer.at(0)!);
-  // console.debug(lines.at(0)!);
-
   return buffer.map((line, index) => {
-    // console.debug({ line });
-    // console.debug({ index });
-    // return ' '.repeat(reservedCharCount + 5) + line.join(' ').trimStart();
     return index === 0
       ? line.join(' ')
       : ' '.repeat(reservedCharCount) + line.join(' ');
