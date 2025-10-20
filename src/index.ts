@@ -76,7 +76,7 @@ export function getDefaultHelpTextTheme(): Theme {
     code: 'bold',
     flag: 'bold',
     header: ['bold', 'title'],
-    option: ['dim', 'upper'],
+    option: ['', 'upper'],
     promptSymbol: 'dim'
   };
 }
