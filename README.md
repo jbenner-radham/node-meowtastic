@@ -27,13 +27,13 @@ Usage
 ```typescript
 import meow from 'meow';
 import {
-  type AnyFlagsWithDescriptions,
   type Config,
+  type Flags,
   getHelpAndVersionFlags,
   getHelpText
 } from 'meowtastic';
 
-const flags: AnyFlagsWithDescriptions = {
+const flags: Flags = {
   ...getHelpAndVersionFlags(), // <- Add a description and short flag to `help` and `version`.
   example: {
     description: 'An example... yeah!',
@@ -63,6 +63,80 @@ meow(
     flags,
     importMeta: import.meta
   }
+);
+```
+
+Theming
+-------
+
+A theme has the following type signature:
+
+```typescript
+// All these cases are exactly like they sound, except for "title". It's a faux titlecase format in
+// which the first letter of each word is capitalized.
+export type TextCase = 'lower' | 'title' | 'upper';
+
+// All the `string` types below can accept a string in the form of anything accepted by
+// [chalk-pipe](https://www.npmjs.com/package/chalk-pipe) for formatting. Of note, if you do not
+// want to use any styling, you can pass an empty string.
+export type Theme = {
+  // Required arguments displayed in the usage section.
+  argument?: string | [string, TextCase];
+
+  // The application's binary name.
+  bin?: string;
+
+  // Markdown code spans in the app description or flag descriptions.
+  code?: string;
+
+  // Flags displayed in the options section.
+  flag?: string;
+
+  // Section headers such as "Usage" and "Options".
+  header?: string | [string, TextCase];
+
+  // Optional arguments displayed in the usage section.
+  option?: string | [string, TextCase];
+
+  // The shell prompt symbol ("$") used in the usage section.
+  promptSymbol?: string;
+};
+```
+
+You can modify the default theme:
+
+```typescript
+import meow from 'meow';
+import { getDefaultHelpTextTheme, getHelpText } from 'meowtastic';
+
+const theme = getDefaultHelpTextTheme();
+
+theme.header = ['blue.underline', 'upper'];
+
+meow(
+  getHelpText({ importMeta: import.meta, theme }),
+  { importMeta: import.meta }
+);
+```
+
+Or create a new theme from scratch:
+
+```typescript
+import meow from 'meow';
+import { type Theme, getHelpText } from 'meowtastic';
+
+const theme: Theme = {
+  bin: 'bold.green',
+  code: 'bold.yellow',
+  flag: 'bold.blue',
+  header: ['bold.underline.blue', 'upper'],
+  option: 'bold.yellow',
+  promptSymbol: 'bold.green'
+};
+
+meow(
+  getHelpText({ importMeta: import.meta, theme }),
+  { importMeta: import.meta }
 );
 ```
 

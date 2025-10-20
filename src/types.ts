@@ -11,7 +11,6 @@ type AnyFlag = StringFlag | BooleanFlag | NumberFlag;
 export type Argument = { name: string; required?: boolean };
 export type Flag = Simplify<AnyFlag> & { description: string };
 export type Flags = Record<string, Flag>;
-export type TextCase = 'lower' | 'title' | 'upper';
 
 export type Config = {
   arguments?: Argument[];
@@ -21,13 +20,33 @@ export type Config = {
   packageOverrides?: PackageJson;
 };
 
+// All these cases are exactly like they sound, except for "title". It's a faux titlecase format in
+// which the first letter of each word is capitalized.
+export type TextCase = 'lower' | 'title' | 'upper';
+
+// All the `string` types below can accept a string in the form of anything accepted by
+// [chalk-pipe](https://www.npmjs.com/package/chalk-pipe) for formatting. Of note, if you do not
+// want to use any styling, you can pass an empty string.
 export type Theme = {
+  // Required arguments displayed in the usage section.
   argument?: string | [string, TextCase];
+
+  // The application's binary name.
   bin?: string;
+
+  // Markdown code spans in the app description or flag descriptions.
   code?: string;
+
+  // Flags displayed in the options section.
   flag?: string;
+
+  // Section headers such as "Usage" and "Options".
   header?: string | [string, TextCase];
+
+  // Optional arguments displayed in the usage section.
   option?: string | [string, TextCase];
+
+  // The shell prompt symbol ("$") used in the usage section.
   promptSymbol?: string;
 };
 
