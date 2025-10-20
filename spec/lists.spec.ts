@@ -1,5 +1,5 @@
-import type { AnyFlag } from '../src/index.js';
 import { getCommaSeparatedQuotedChoicesOrList } from '../src/lists.js';
+import type { Flag } from '../src/types.js';
 import { describe, expect, it } from 'vitest';
 
 describe('getCommaSeparatedQuotedChoicesOrList', () => {
@@ -8,13 +8,13 @@ describe('getCommaSeparatedQuotedChoicesOrList', () => {
   });
 
   it('returns a string', () => {
-    const flag: AnyFlag = { choices: ['foo', 'bar', 'baz'], type: 'string' };
+    const flag: Flag = { choices: ['foo', 'bar', 'baz'], type: 'string' };
 
     expect(getCommaSeparatedQuotedChoicesOrList(flag)).toBeTypeOf('string');
   });
 
   it('returns a list of choices with an "or" before the last item', () => {
-    const flag: AnyFlag = { choices: ['foo', 'bar', 'baz'], type: 'string' };
+    const flag: Flag = { choices: ['foo', 'bar', 'baz'], type: 'string' };
     const actual = getCommaSeparatedQuotedChoicesOrList(flag);
     const expected = '"foo", "bar", or "baz"';
 
@@ -22,7 +22,7 @@ describe('getCommaSeparatedQuotedChoicesOrList', () => {
   });
 
   it('returns a single quoted item if only one choice is present', () => {
-    const flag: AnyFlag = { choices: ['foo'], type: 'string' };
+    const flag: Flag = { choices: ['foo'], type: 'string' };
 
     expect(getCommaSeparatedQuotedChoicesOrList(flag)).toEqual('"foo"');
   });

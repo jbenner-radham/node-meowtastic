@@ -1,10 +1,10 @@
-import type { AnyFlag } from './index.js';
+import type { Flag } from './types.js';
 
 function quote(value: string): string {
   return `"${value}"`;
 }
 
-function getCommaSeparatedQuotedChoicesList(flag: AnyFlag, conjunction: string) {
+function getCommaSeparatedQuotedChoicesList(flag: Flag, conjunction: string) {
   if (!Array.isArray(flag.choices) || flag.choices.length === 0) {
     return '';
   }
@@ -19,6 +19,6 @@ function getCommaSeparatedQuotedChoicesList(flag: AnyFlag, conjunction: string) 
   return [...quotedChoices.slice(0, -1), orPrefixedChoice].join(', ');
 }
 
-export function getCommaSeparatedQuotedChoicesOrList(flag: AnyFlag): string {
+export function getCommaSeparatedQuotedChoicesOrList(flag: Flag): string {
   return getCommaSeparatedQuotedChoicesList(flag, 'or');
 }
