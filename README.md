@@ -164,7 +164,7 @@ const theme: Theme = {
   promptSymbol: 'bold.green'
 };
 
-meow(...getHelpTextAndOptions({ importMeta: import.meta, theme }))
+meow(...getHelpTextAndOptions({ importMeta: import.meta, theme }));
 ```
 
 Prior Art
