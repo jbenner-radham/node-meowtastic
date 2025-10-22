@@ -140,23 +140,20 @@ You can modify the default theme:
 
 ```typescript
 import meow from 'meow';
-import { getDefaultHelpTextTheme, getHelpText } from 'meowtastic';
+import { getDefaultHelpTextTheme, getHelpTextAndOptions } from 'meowtastic';
 
 const theme = getDefaultHelpTextTheme();
 
 theme.header = ['blue.underline', 'upper'];
 
-meow(
-  getHelpText({ importMeta: import.meta, theme }),
-  { importMeta: import.meta }
-);
+meow(...getHelpTextAndOptions({ importMeta: import.meta, theme }));
 ```
 
 Or create a new theme from scratch:
 
 ```typescript
 import meow from 'meow';
-import { type Theme, getHelpText } from 'meowtastic';
+import { type Theme, getHelpTextAndOptions } from 'meowtastic';
 
 const theme: Theme = {
   bin: 'bold.green',
@@ -167,10 +164,7 @@ const theme: Theme = {
   promptSymbol: 'bold.green'
 };
 
-meow(
-  getHelpText({ importMeta: import.meta, theme }),
-  { importMeta: import.meta }
-);
+meow(...getHelpTextAndOptions({ importMeta: import.meta, theme }))
 ```
 
 Prior Art
