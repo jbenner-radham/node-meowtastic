@@ -1,6 +1,6 @@
 {
   "name": "meowtastic",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A helper library for `meow`. Automatically create stylized help text and more.",
   "keywords": [
     "cli",
