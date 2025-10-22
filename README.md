@@ -56,7 +56,7 @@ const config: Config = {
 meow(...getHelpTextAndOptions(config));
 ```
 
-Or, if desired a more granular approach:
+Or if desired, a more granular approach:
 
 ```typescript
 import meow from 'meow';
