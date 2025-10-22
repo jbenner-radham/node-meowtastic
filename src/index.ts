@@ -18,11 +18,12 @@ import type {
 import chalkPipe from 'chalk-pipe';
 import decamelize from 'decamelize';
 import decamelizeKeys from 'decamelize-keys';
+import type { Options } from 'meow';
 import { EOL } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readPackageUpSync } from 'read-package-up';
-import type { PackageJson } from 'type-fest';
+import type { PackageJson, Writable } from 'type-fest';
 
 export type { Argument, Config, Flag, Flags, TextCase, TextCaseThemeProperty, Theme };
 
@@ -63,7 +64,7 @@ export function getHelpText(config: Config): string {
     throw new Error('Could not determine the name of the CLI app binary');
   }
 
-  const theme = getDefaultHelpTextTheme();
+  const theme = config.theme ?? getDefaultHelpTextTheme();
   const styler = Object.entries(theme).reduce((accumulator, [key, value]) => {
     const supportsTextCasing = TEXT_CASE_THEME_PROPERTIES
       .includes(key as TextCaseThemeProperty);
@@ -104,8 +105,20 @@ export function getHelpText(config: Config): string {
     return text.replaceAll(/`[^`]+`/g, match => styler.code(match.slice(1, -1)));
   };
 
-  const { includeDescription = false, includeOptionsArgument = true } = config;
-  const description = includeDescription ? styleCodeSpans(getPackageDescription(pkg)) : '';
+  const getDescription = ({ description }: Config): string => {
+    if (typeof description === 'string') {
+      return styleCodeSpans(description);
+    }
+
+    if (typeof description === 'undefined') {
+      return styleCodeSpans(getPackageDescription(pkg));
+    }
+
+    return '';
+  };
+
+  const { includeOptionsArgument = true } = config;
+  const description = getDescription(config);
 
   let usageBody = ' '.repeat(INDENT_SPACES_COUNT) +
     `${styler.promptSymbol('$')} ${styler.bin(bin)}`;
@@ -164,9 +177,35 @@ export function getHelpText(config: Config): string {
     `  ${optionsBody}`
   ];
 
-  if (includeDescription) {
+  if (description.length) {
     helpLines.unshift(description, '');
   }
 
   return helpLines.join(EOL);
+}
+
+export function getHelpTextAndOptions(config: Config): [string, Options<Flags>] {
+  const { augmentHelpAndVersionFlags = true, description } = config;
+
+  if (augmentHelpAndVersionFlags) {
+    (config as Writable<Config>).flags = {
+      ...getHelpAndVersionFlags(),
+      ...config.flags
+    };
+  }
+
+  const helpText = getHelpText(config);
+  const keysNotInOptions = [
+    'arguments', 'includeDescription', 'includeOptionsArgument', 'packageOverrides'
+  ];
+  const options = Object.entries(config).reduce((accumulator, [key, value]) => {
+    if (!keysNotInOptions.includes(key)) {
+      // @ts-expect-error The key type is valid, but I can't get TS to play nice with it.
+      accumulator[key] = value;
+    }
+
+    return accumulator;
+  }, (description !== false ? { description: false } : {}) as Options<Flags>);
+
+  return [helpText, options];
 }

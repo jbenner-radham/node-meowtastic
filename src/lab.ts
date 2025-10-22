@@ -1,42 +1,27 @@
-import {
-  type Config,
-  type Flags,
-  getHelpAndVersionFlags,
-  getHelpText
-} from './index.js';
+import { type Config, getHelpTextAndOptions } from './index.js';
 import meow from 'meow';
 
-const flags: Flags = {
-  ...getHelpAndVersionFlags(),
-  example: {
-    description: 'An example... yeah!',
-    shortFlag: 'e',
-    type: 'string'
-  },
-  yolo: {
-    description: 'Do something or invoke `yolo` or something else... Invoke `idk`?',
-    shortFlag: 'y',
-    type: 'boolean'
-  }
-};
 const config: Config = {
   arguments: [
     { name: 'file', required: true },
     { name: 'additional files...' }
   ],
-  flags,
+  flags: {
+    example: {
+      description: 'An example... yeah!',
+      shortFlag: 'e',
+      type: 'string'
+    },
+    yolo: {
+      description: 'Do something or invoke `yolo` or something else... Invoke `idk`?',
+      shortFlag: 'y',
+      type: 'boolean'
+    }
+  },
   importMeta: import.meta,
-  includeDescription: true,
   packageOverrides: {
     bin: { meowtastic: 'path/to/bin' }
   }
 };
 
-meow(
-  getHelpText(config),
-  {
-    description: false,
-    flags,
-    importMeta: import.meta
-  }
-);
+meow(...getHelpTextAndOptions(config));

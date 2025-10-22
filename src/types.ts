@@ -1,4 +1,4 @@
-import type { Flag as MeowFlag } from 'meow';
+import type { Flag as MeowFlag, Options } from 'meow';
 import type { PackageJson, Simplify } from 'type-fest';
 
 // These aren't exported from `meow` for whatever reason. So I just copy/pasted them here.
@@ -12,13 +12,35 @@ export type Argument = { name: string; required?: boolean };
 export type Flag = Simplify<AnyFlag> & { description?: string };
 export type Flags = Record<string, Flag>;
 
-export type Config = {
+export type Config = Options<Flags> & {
+  /**
+   * The positional arguments of the app.
+   */
   arguments?: Argument[];
-  flags?: Flags;
-  importMeta: ImportMeta;
-  includeDescription?: boolean;
+
+  /**
+   * Whether to add a description and short flag to the help and version flags.
+   *
+   * @default true
+   */
+  augmentHelpAndVersionFlags?: boolean;
+
+  /**
+   * Whether to include the `[OPTIONS]` argument in the usage section.
+   *
+   * @default true
+   */
   includeOptionsArgument?: boolean;
+
+  /**
+   * Overrides for the `package.json` file.
+   */
   packageOverrides?: PackageJson;
+
+  /**
+   * A theme to use for the help text.
+   */
+  theme?: Theme;
 };
 
 // All these cases are exactly like they sound, except for "title". It's a faux titlecase format

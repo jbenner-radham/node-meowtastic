@@ -28,6 +28,38 @@ Usage
 
 ```typescript
 import meow from 'meow';
+import { type Config, getHelpTextAndOptions } from 'meowtastic';
+
+const config: Config = {
+  arguments: [
+    { name: 'file', required: true },
+    { name: 'additional files...' }
+  ],
+  flags: {
+    example: {
+      description: 'An example... yeah!',
+      shortFlag: 'e',
+      type: 'string'
+    },
+    yolo: {
+      description: 'Do something or invoke `yolo` or something else... Invoke `idk`?',
+      shortFlag: 'y',
+      type: 'boolean'
+    }
+  },
+  importMeta: import.meta,
+  packageOverrides: {
+    bin: { meowtastic: 'path/to/bin' }
+  }
+};
+
+meow(...getHelpTextAndOptions(config));
+```
+
+Or, if desired a more granular approach:
+
+```typescript
+import meow from 'meow';
 import {
   type Config,
   type Flags,
@@ -52,7 +84,6 @@ const flags: Flags = {
 const config: Config = {
   flags,
   importMeta: import.meta,
-  includeDescription: true,
   packageOverrides: {
     bin: { meowtastic: 'path/to/bin' }
   }
