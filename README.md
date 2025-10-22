@@ -116,7 +116,7 @@ export type Theme = {
   // Required arguments displayed in the usage section.
   argument?: string | [string, TextCase];
 
-  // The application's binary name.
+  // The application binary's name.
   bin?: string;
 
   // Markdown code spans in the app description or flag descriptions.
