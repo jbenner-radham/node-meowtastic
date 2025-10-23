@@ -131,7 +131,7 @@ export function getHelpText(config: Config): string {
 
   if (args.length) {
     const formattedArguments = args.map(arg =>
-      arg.required
+      arg.isRequired
         ? styler.argument(`<${arg.name}>`)
         : styler.option(`[${arg.name}]`)
     );

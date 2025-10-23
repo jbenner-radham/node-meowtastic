@@ -8,7 +8,7 @@ type BooleanFlag = MeowFlag<'boolean', boolean> | MeowFlag<'boolean', boolean[],
 type NumberFlag = MeowFlag<'number', number> | MeowFlag<'number', number[], true>;
 type AnyFlag = StringFlag | BooleanFlag | NumberFlag;
 
-export type Argument = { name: string; required?: boolean };
+export type Argument = { name: string; isRequired?: boolean };
 export type Flag = Simplify<Writable<AnyFlag>> & { description?: string };
 export type Flags = Record<string, Flag>;
 

@@ -3,7 +3,7 @@ import meow from 'meow';
 
 const config: Config = {
   arguments: [
-    { name: 'file', required: true },
+    { name: 'file', isRequired: true },
     { name: 'additional files...' }
   ],
   flags: {
