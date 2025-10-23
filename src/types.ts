@@ -3,10 +3,11 @@ import type { PackageJson, Simplify, Writable } from 'type-fest';
 
 // These aren't exported from `meow` for whatever reason. So I just copy/pasted them here.
 // From: https://tinyurl.com/7apyy7bk
-type StringFlag = MeowFlag<'string', string> | MeowFlag<'string', string[], true>;
-type BooleanFlag = MeowFlag<'boolean', boolean> | MeowFlag<'boolean', boolean[], true>;
-type NumberFlag = MeowFlag<'number', number> | MeowFlag<'number', number[], true>;
-type AnyFlag = StringFlag | BooleanFlag | NumberFlag;
+export type StringFlag = MeowFlag<'string', string> | MeowFlag<'string', string[], true>;
+export type BooleanFlag = MeowFlag<'boolean', boolean> | MeowFlag<'boolean', boolean[], true>;
+export type NumberFlag = MeowFlag<'number', number> | MeowFlag<'number', number[], true>;
+export type AnyFlag = StringFlag | BooleanFlag | NumberFlag;
+export type AnyFlags = Record<string, AnyFlag>;
 
 export type Argument = { name: string; isRequired?: boolean };
 export type Flag = Simplify<Writable<AnyFlag>> & { description?: string };

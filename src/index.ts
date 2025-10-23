@@ -7,6 +7,7 @@ import {
 import defaultTheme from './default-theme.js';
 import { getPackageBin, getPackageDescription } from './package.js';
 import type {
+  AnyFlags,
   Argument,
   Config,
   Flag,
@@ -184,7 +185,7 @@ export function getHelpText(config: Config): string {
   return helpLines.join(EOL);
 }
 
-export function getHelpTextAndOptions(config: Config): [string, Options<Flags>] {
+export function getHelpTextAndOptions(config: Config): [string, Options<AnyFlags>] {
   const { augmentHelpAndVersionFlags = true, description } = config;
 
   if (augmentHelpAndVersionFlags) {
@@ -199,13 +200,18 @@ export function getHelpTextAndOptions(config: Config): [string, Options<Flags>] 
     'arguments', 'includeDescription', 'includeOptionsArgument', 'packageOverrides'
   ];
   const options = Object.entries(config).reduce((accumulator, [key, value]) => {
+    if (key === 'flags') {
+      // Convert object from type `Flags` to `AnyFlags`.
+      Object.values(value as Flags).forEach(flag => delete flag.description);
+    }
+
     if (!keysNotInOptions.includes(key)) {
       // @ts-expect-error The key type is valid, but I can't get TS to play nice with it.
       accumulator[key] = value;
     }
 
     return accumulator;
-  }, (description !== false ? { description: false } : {}) as Options<Flags>);
+  }, (description !== false ? { description: false } : {}) as Options<AnyFlags>);
 
   return [helpText, options];
 }
