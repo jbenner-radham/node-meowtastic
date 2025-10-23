@@ -11,7 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Updated the `Config` type to use `Writable` to allow for mutable properties.
+- Updated the `Config` type to allow for mutable properties. Previously the properties inherited
+  from `meow.Options` were all `readonly`. In the future this could change and all the properties of
+  `Config` may be changed to `readonly` though.
 - The `Argument.required` property to `Argument.isRequired` to match the style of `meow`.
 
 [0.2.0] - 2025-10-22
