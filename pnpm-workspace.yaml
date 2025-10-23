@@ -1,16 +1,3 @@
 minimumReleaseAge: 1440
-minimumReleaseAgeExclude:
-  - '@radham/eslint-config'
-  - '@typescript-eslint/eslint-plugin'
-  - '@typescript-eslint/parser'
-  - '@typescript-eslint/project-service'
-  - '@typescript-eslint/scope-manager'
-  - '@typescript-eslint/tsconfig-utils'
-  - '@typescript-eslint/type-utils'
-  - '@typescript-eslint/types'
-  - '@typescript-eslint/typescript-estree'
-  - '@typescript-eslint/utils'
-  - '@typescript-eslint/visitor-keys'
-  - 'typescript-eslint'
 onlyBuiltDependencies:
-  - esbuild
+  - esbuild@0.25.10 || 0.25.11
