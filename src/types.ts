@@ -1,5 +1,5 @@
 import type { Flag as MeowFlag, Options } from 'meow';
-import type { PackageJson, Simplify } from 'type-fest';
+import type { PackageJson, Simplify, Writable } from 'type-fest';
 
 // These aren't exported from `meow` for whatever reason. So I just copy/pasted them here.
 // From: https://tinyurl.com/7apyy7bk
@@ -9,10 +9,10 @@ type NumberFlag = MeowFlag<'number', number> | MeowFlag<'number', number[], true
 type AnyFlag = StringFlag | BooleanFlag | NumberFlag;
 
 export type Argument = { name: string; required?: boolean };
-export type Flag = Simplify<AnyFlag> & { description?: string };
+export type Flag = Simplify<Writable<AnyFlag>> & { description?: string };
 export type Flags = Record<string, Flag>;
 
-export type Config = Options<Flags> & {
+export type Config = Writable<Options<Flags>> & {
   /**
    * The positional arguments of the app.
    */
