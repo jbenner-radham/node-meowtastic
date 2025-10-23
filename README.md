@@ -32,7 +32,7 @@ import { type Config, getHelpTextAndOptions } from 'meowtastic';
 
 const config: Config = {
   arguments: [
-    { name: 'file', required: true },
+    { name: 'file', isRequired: true },
     { name: 'additional files...' }
   ],
   flags: {
@@ -82,6 +82,10 @@ const flags: Flags = {
 };
 
 const config: Config = {
+  arguments: [
+    { name: 'file', isRequired: true },
+    { name: 'additional files...' }
+  ],
   flags,
   importMeta: import.meta,
   packageOverrides: {
