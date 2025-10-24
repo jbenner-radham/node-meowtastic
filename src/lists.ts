@@ -19,6 +19,10 @@ function getCommaSeparatedQuotedChoicesList(flag: Flag, conjunction: string) {
   return [...quotedChoices.slice(0, -1), orPrefixedChoice].join(', ');
 }
 
+export function getCommaSeparatedQuotedChoicesAndList(flag: Flag): string {
+  return getCommaSeparatedQuotedChoicesList(flag, 'and');
+}
+
 export function getCommaSeparatedQuotedChoicesOrList(flag: Flag): string {
   return getCommaSeparatedQuotedChoicesList(flag, 'or');
 }

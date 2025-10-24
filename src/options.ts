@@ -1,9 +1,15 @@
 import {
+  FLAG_CHOICES_AND_LIST_VARIABLE,
+  FLAG_CHOICES_OR_LIST_VARIABLE,
   INDENT_SPACES_COUNT,
   MAX_COLUMNS_COUNT,
   OPTIONS_SECTION_INNER_PADDING_SPACES_COUNT
 } from './constants.js';
 import { getHelpAndVersionFlags } from './index.js';
+import {
+  getCommaSeparatedQuotedChoicesAndList,
+  getCommaSeparatedQuotedChoicesOrList
+} from './lists.js';
 import styleCodeSpans from './style-code-spans.js';
 import type { Flag, Flags, OptionsFlagSpacing, Styler } from './types.js';
 import { wrapTextIntoLines } from './wrap-text.js';
@@ -53,6 +59,26 @@ function getOptionsFlagColumn({
   );
 }
 
+function maybeTransformOptionDescription(flag: Flag): string {
+  let buffer = [...flag.description ?? ''].join('');
+
+  if (buffer.includes(FLAG_CHOICES_AND_LIST_VARIABLE)) {
+    buffer = buffer.replaceAll(
+      FLAG_CHOICES_AND_LIST_VARIABLE,
+      getCommaSeparatedQuotedChoicesAndList(flag)
+    );
+  }
+
+  if (buffer.includes(FLAG_CHOICES_OR_LIST_VARIABLE)) {
+    buffer = buffer.replaceAll(
+      FLAG_CHOICES_OR_LIST_VARIABLE,
+      getCommaSeparatedQuotedChoicesOrList(flag)
+    );
+  }
+
+  return buffer;
+}
+
 function getOptionsFlagLines({
   name,
   flag,
@@ -69,9 +95,10 @@ function getOptionsFlagLines({
   wrapText: boolean;
 }) {
   const flagLine = getOptionsFlagColumn({ name, flag, columnWidth: flagColumnWidth, styler });
+  const description = maybeTransformOptionDescription(flag);
   const descriptionColumn = wrapText
-    ? wrapTextIntoLines({ text: flag.description ?? '', columnWidth: descriptionColumnWidth })
-    : [flag.description ?? ''];
+    ? wrapTextIntoLines({ text: description, columnWidth: descriptionColumnWidth })
+    : [description];
   const flagColumn = [
     flagLine,
     ...Array.from({ length: descriptionColumn.length - 1 }, () => ' '.repeat(flagColumnWidth))

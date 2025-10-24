@@ -16,13 +16,19 @@ const config: Config = {
       description: 'Use `backticks` to format text.',
       shortFlag: 'c',
       type: 'boolean'
+    },
+    choices: {
+      description: 'A list of choices. Options are %CHOICES_AND%.',
+      shortFlag: 'C',
+      type: 'string',
+      choices: ['one', 'two', 'three']
     }
   },
   importMeta: import.meta,
   packageOverrides: {
     bin: { meowtastic: 'path/to/bin' }
   },
-  wrapText: false
+  wrapText: true
 };
 
 meow(...getHelpTextAndOptions(config));

@@ -1,6 +1,10 @@
 import type { TextCaseThemeProperty } from './types.js';
 import process from 'node:process';
 
+export const FLAG_CHOICES_AND_LIST_VARIABLE = '%CHOICES_AND%';
+
+export const FLAG_CHOICES_OR_LIST_VARIABLE = '%CHOICES_OR%';
+
 export const INDENT_SPACES_COUNT = 2;
 
 export const MAX_COLUMNS_COUNT = 80;
