@@ -8,7 +8,8 @@ const config: Config = {
   ],
   flags: {
     example: {
-      description: 'An example... yeah!',
+      default: 'this',
+      description: 'An example... yeah! Defaults to %DEFAULT%.',
       shortFlag: 'e',
       type: 'string'
     },

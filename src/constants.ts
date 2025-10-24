@@ -1,6 +1,8 @@
 import type { TextCaseThemeProperty } from './types.js';
 import process from 'node:process';
 
+export const DEFAULT_VARIABLE = '%DEFAULT%';
+
 export const FLAG_CHOICES_AND_LIST_VARIABLE = '%CHOICES_AND%';
 
 export const FLAG_CHOICES_OR_LIST_VARIABLE = '%CHOICES_OR%';

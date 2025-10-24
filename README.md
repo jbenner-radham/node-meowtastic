@@ -16,6 +16,7 @@ Features
 - Provides optional descriptions and short flags for the `help` and `version` flags.
 - Supports the [`NO_COLOR`](https://no-color.org/) environment variable standard.
 - Wraps help text at 80 columns by default, although this can be disabled.
+- Provides variables which expand into the `choices` or `default` values of flags.
 
 Install
 -------
@@ -38,7 +39,8 @@ const config: Config = {
   ],
   flags: {
     example: {
-      description: 'An example... yeah!',
+      default: 'this',
+      description: 'An example... yeah! Defaults to %DEFAULT%.',
       shortFlag: 'e',
       type: 'string'
     },
@@ -46,13 +48,19 @@ const config: Config = {
       description: 'Use `backticks` to format text.',
       shortFlag: 'c',
       type: 'boolean'
+    },
+    choices: {
+      description: 'A list of choices. Options are %CHOICES_AND%.',
+      shortFlag: 'C',
+      type: 'string',
+      choices: ['one', 'two', 'three']
     }
   },
   importMeta: import.meta,
   packageOverrides: {
     bin: { meowtastic: 'path/to/bin' }
   },
-  wrapText: false
+  wrapText: true
 };
 
 meow(...getHelpTextAndOptions(config));
@@ -72,7 +80,8 @@ import {
 const flags: Flags = {
   ...getHelpAndVersionFlags(), // <- Add a description and short flag to `help` and `version`.
   example: {
-    description: 'An example... yeah!',
+    default: 'this',
+    description: 'An example... yeah! Defaults to %DEFAULT%.',
     shortFlag: 'e',
     type: 'string'
   },
@@ -80,6 +89,12 @@ const flags: Flags = {
     description: 'Use `backticks` to format text.',
     shortFlag: 'c',
     type: 'boolean'
+  },
+  choices: {
+    description: 'A list of choices. Options are %CHOICES_AND%.',
+    shortFlag: 'C',
+    type: 'string',
+    choices: ['one', 'two', 'three']
   }
 };
 
@@ -93,7 +108,7 @@ const config: Config = {
   packageOverrides: {
     bin: { meowtastic: 'path/to/bin' }
   },
-  wrapText: false
+  wrapText: true
 };
 
 meow(

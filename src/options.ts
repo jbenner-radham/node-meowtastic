@@ -1,4 +1,5 @@
 import {
+  DEFAULT_VARIABLE,
   FLAG_CHOICES_AND_LIST_VARIABLE,
   FLAG_CHOICES_OR_LIST_VARIABLE,
   INDENT_SPACES_COUNT,
@@ -61,6 +62,12 @@ function getOptionsFlagColumn({
 
 function maybeTransformOptionDescription(flag: Flag): string {
   let buffer = [...flag.description ?? ''].join('');
+
+  if (buffer.includes(DEFAULT_VARIABLE)) {
+    const quote = (value: unknown) =>
+      typeof value === 'string' ? `"${value}"` : '`' + String(value) + '`';
+    buffer = buffer.replaceAll(DEFAULT_VARIABLE, flag.default ? quote(flag.default) : '');
+  }
 
   if (buffer.includes(FLAG_CHOICES_AND_LIST_VARIABLE)) {
     buffer = buffer.replaceAll(

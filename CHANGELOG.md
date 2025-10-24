@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]
 ------------
 
+### Added
+
+- The `%DEFAULT%`, `%CHOICES_AND%`, and `%CHOICES_OR%` variables which expand to the default value
+  of a flag, the choices of a flag with an "and" conjunction, and the choices of a flag with an "or"
+  conjunction respectively.
+
 ### Changed
 
 - Compressed example image used in readme.
