@@ -21,7 +21,8 @@ const config: Config = {
   importMeta: import.meta,
   packageOverrides: {
     bin: { meowtastic: 'path/to/bin' }
-  }
+  },
+  wrapText: false
 };
 
 meow(...getHelpTextAndOptions(config));
