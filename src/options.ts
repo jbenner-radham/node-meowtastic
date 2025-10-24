@@ -64,9 +64,9 @@ function maybeTransformOptionDescription(flag: Flag): string {
   let buffer = [...flag.description ?? ''].join('');
 
   if (buffer.includes(DEFAULT_VARIABLE)) {
-    const quote = (value: unknown) =>
-      typeof value === 'string' ? `"${value}"` : '`' + String(value) + '`';
-    buffer = buffer.replaceAll(DEFAULT_VARIABLE, flag.default ? quote(flag.default) : '');
+    const maybeQuote = (value: unknown) =>
+      typeof value === 'string' ? `"${value}"` : String(value);
+    buffer = buffer.replaceAll(DEFAULT_VARIABLE, flag.default ? maybeQuote(flag.default) : '');
   }
 
   if (buffer.includes(FLAG_CHOICES_AND_LIST_VARIABLE)) {

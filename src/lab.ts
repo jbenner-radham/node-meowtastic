@@ -8,10 +8,10 @@ const config: Config = {
   ],
   flags: {
     example: {
-      default: 'this',
+      default: 5,
       description: 'An example... yeah! Defaults to %DEFAULT%.',
       shortFlag: 'e',
-      type: 'string'
+      type: 'number'
     },
     codeSpans: {
       description: 'Use `backticks` to format text.',

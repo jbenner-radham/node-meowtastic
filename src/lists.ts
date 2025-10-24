@@ -1,7 +1,9 @@
 import type { Flag } from './types.js';
 
-function quote(value: string): string {
-  return `"${value}"`;
+function maybeQuote(value: unknown): string {
+  return typeof value === 'string'
+    ? `"${value}"`
+    : String(value);
 }
 
 function getCommaSeparatedQuotedChoicesList(flag: Flag, conjunction: string) {
@@ -10,10 +12,10 @@ function getCommaSeparatedQuotedChoicesList(flag: Flag, conjunction: string) {
   }
 
   if (flag.choices.length === 1) {
-    return quote(String(flag.choices.at(0)));
+    return maybeQuote(String(flag.choices.at(0)));
   }
 
-  const quotedChoices = flag.choices.map(String).map(quote);
+  const quotedChoices = flag.choices.map(String).map(maybeQuote);
   const orPrefixedChoice = `${conjunction} ${quotedChoices.at(-1)}`;
 
   return [...quotedChoices.slice(0, -1), orPrefixedChoice].join(', ');
