@@ -12,9 +12,9 @@ const config: Config = {
       shortFlag: 'e',
       type: 'string'
     },
-    yolo: {
-      description: 'Do something or invoke `yolo` or something else... Invoke `idk`?',
-      shortFlag: 'y',
+    codeSpans: {
+      description: 'Use `backticks` to format text.',
+      shortFlag: 'c',
       type: 'boolean'
     }
   },

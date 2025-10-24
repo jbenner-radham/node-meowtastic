@@ -13,6 +13,11 @@ export type Argument = { name: string; isRequired?: boolean };
 export type Flag = Simplify<Writable<AnyFlag>> & { description?: string };
 export type Flags = Record<string, Flag>;
 
+export type OptionsFlagSpacing = {
+  start: number;
+  end: number;
+};
+
 export type Config = Writable<Options<Flags>> & {
   /**
    * The positional arguments of the app.
@@ -42,6 +47,13 @@ export type Config = Writable<Options<Flags>> & {
    * A theme to use for the help text.
    */
   theme?: Theme;
+
+  /**
+   * Whether to wrap text.
+   *
+   * @default true
+   */
+  wrapText?: boolean;
 };
 
 // All these cases are exactly like they sound, except for "title". It's a faux titlecase format
@@ -73,5 +85,7 @@ export type Theme = {
   // The shell prompt symbol ("$") used in the usage section.
   promptSymbol?: string;
 };
+
+export type Styler = Record<keyof Theme, (value: string) => string>;
 
 export type TextCaseThemeProperty = keyof Pick<Theme, 'argument' | 'header' | 'option'>;

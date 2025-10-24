@@ -15,6 +15,7 @@ Features
 - Is easily themeable.
 - Provides optional descriptions and short flags for the `help` and `version` flags.
 - Supports the [`NO_COLOR`](https://no-color.org/) environment variable standard.
+- Wraps help text at 80 columns by default, although this can be disabled.
 
 Install
 -------
@@ -50,7 +51,8 @@ const config: Config = {
   importMeta: import.meta,
   packageOverrides: {
     bin: { meowtastic: 'path/to/bin' }
-  }
+  },
+  wrapText: false
 };
 
 meow(...getHelpTextAndOptions(config));
@@ -90,7 +92,8 @@ const config: Config = {
   importMeta: import.meta,
   packageOverrides: {
     bin: { meowtastic: 'path/to/bin' }
-  }
+  },
+  wrapText: false
 };
 
 meow(

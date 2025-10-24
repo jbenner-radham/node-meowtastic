@@ -1,71 +1,42 @@
-import {
-  INDENT_SPACES_COUNT,
-  MAX_TERMINAL_COLUMNS_COUNT,
-  NO_COLOR,
-  OPTIONS_SECTION_SEPARATOR_SPACES_COUNT
-} from './constants.js';
-import { EOL } from 'node:os';
+import { NO_COLOR } from './constants.js';
 
-function getTextLength(text: string): number {
-  const backtickCount = [...text].find(char => char === '`')?.length ?? 0;
+export function getTextLength(text: string): number {
+  const backtickCount = [...text].filter(char => char === '`').length;
 
-  if (NO_COLOR || backtickCount % 2 !== 0) {
-    return text.length + (backtickCount >= 3 ? backtickCount - 1 : 0);
+  if (NO_COLOR) {
+    return text.length;
+  }
+
+  if (backtickCount % 2 !== 0) {
+    return backtickCount >= 3
+      ? text.length - (backtickCount + 1)
+      : text.length;
   }
 
   return text.length - backtickCount;
 }
 
-export function wrapTextIfNeeded(
-  text: string, { reservedCharCount = 0 }: { reservedCharCount?: number } = {}
-): string {
-  const totalInitialUsedCharsCount = reservedCharCount + getTextLength(text);
-
-  if (totalInitialUsedCharsCount <= MAX_TERMINAL_COLUMNS_COUNT) {
-    return text;
-  }
-
+export function wrapTextIntoLines(
+  { columnWidth, text }: { columnWidth: number; text: string }
+): string[] {
   const words = text.split(' ');
-  const buffer = [words];
-  let currentLineIndex = 0;
-  let nextLineIndex = 0;
+  const lines = [];
+  let buffer = '';
 
-  while (
-    reservedCharCount + buffer.at(currentLineIndex)!.join(' ').length > MAX_TERMINAL_COLUMNS_COUNT
-  ) {
-    const word = buffer.at(currentLineIndex)!.pop()!;
+  words.forEach(word => {
+    const maybeSpace = buffer ? ' ' : '';
 
-    if (currentLineIndex === nextLineIndex) {
-      nextLineIndex = currentLineIndex + 1;
+    if (getTextLength(buffer + maybeSpace + word) <= columnWidth) {
+      buffer += maybeSpace + word;
+    } else {
+      lines.push(buffer);
+      buffer = word;
     }
+  });
 
-    if (!buffer.at(nextLineIndex)) {
-      buffer.push([]);
-    }
-
-    buffer.at(nextLineIndex)!.push(word);
-
-    if (
-      reservedCharCount + buffer.at(currentLineIndex)!.join(' ').length <=
-      MAX_TERMINAL_COLUMNS_COUNT
-    ) {
-      currentLineIndex = nextLineIndex;
-    }
+  if (buffer) {
+    lines.push(buffer);
   }
 
-  return buffer.map((line, index) => {
-    return index === 0
-      ? line.join(' ')
-      : ' '.repeat(reservedCharCount) + line.join(' ');
-  }).join(EOL);
-}
-
-export function wrapOptionsTextIfNeeded(longestFlagLength: number, text: string): string {
-  const reservedCharCount = (
-    longestFlagLength +
-    INDENT_SPACES_COUNT +
-    OPTIONS_SECTION_SEPARATOR_SPACES_COUNT
-  );
-
-  return wrapTextIfNeeded(text, { reservedCharCount });
+  return lines;
 }
