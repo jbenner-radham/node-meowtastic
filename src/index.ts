@@ -10,7 +10,6 @@ import { getPackageBin, getPackageDescription } from './package.js';
 import styleCodeSpans from './style-code-spans.js';
 import type {
   AnyFlags,
-  Argument,
   Config,
   Flag,
   Flags,
@@ -29,7 +28,7 @@ import { fileURLToPath } from 'node:url';
 import { readPackageUpSync } from 'read-package-up';
 import type { PackageJson, Writable } from 'type-fest';
 
-export type { Argument, Config, Flag, Flags, TextCase, TextCaseThemeProperty, Theme };
+export type { Config, Flag, Flags, TextCase, TextCaseThemeProperty, Theme };
 
 export function getDefaultHelpTextTheme(): Theme {
   return { ...defaultTheme };

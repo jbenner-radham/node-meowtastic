@@ -32,6 +32,8 @@ Usage
 import meow from 'meow';
 import { type Config, getHelpTextAndOptions } from 'meowtastic';
 
+// Includes all the options that `meow` accepts.
+// See https://github.com/sindresorhus/meow#api for reference.
 const config: Config = {
   arguments: [
     { name: 'file', isRequired: true },
@@ -59,8 +61,7 @@ const config: Config = {
   importMeta: import.meta,
   packageOverrides: {
     bin: { meowtastic: 'path/to/bin' }
-  },
-  wrapText: true
+  }
 };
 
 meow(...getHelpTextAndOptions(config));
@@ -107,8 +108,7 @@ const config: Config = {
   importMeta: import.meta,
   packageOverrides: {
     bin: { meowtastic: 'path/to/bin' }
-  },
-  wrapText: true
+  }
 };
 
 meow(
@@ -120,6 +120,9 @@ meow(
   }
 );
 ```
+
+See the "types" file (`src/types.ts` in the source distribution and `dist/types/types.d.ts` in the
+package distribution) for more information.
 
 Theming
 -------

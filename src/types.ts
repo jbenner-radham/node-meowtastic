@@ -9,20 +9,21 @@ export type NumberFlag = MeowFlag<'number', number> | MeowFlag<'number', number[
 export type AnyFlag = StringFlag | BooleanFlag | NumberFlag;
 export type AnyFlags = Record<string, AnyFlag>;
 
-export type Argument = { name: string; isRequired?: boolean };
 export type Flag = Simplify<Writable<AnyFlag>> & { description?: string };
 export type Flags = Record<string, Flag>;
 
-export type OptionsFlagSpacing = {
-  start: number;
-  end: number;
-};
-
+/**
+ * The configuration for both `getHelpText` and `getHelpTextAndOptions`.
+ *
+ * Includes all the options that `meow` accepts.
+ *
+ * @see {@link https://github.com/sindresorhus/meow#api}
+ */
 export type Config = Writable<Options<Flags>> & {
   /**
    * The positional arguments of the app.
    */
-  arguments?: Argument[];
+  arguments?: { name: string; isRequired?: boolean }[];
 
   /**
    * Whether to add a description and short flag to the help and version flags.
@@ -55,6 +56,8 @@ export type Config = Writable<Options<Flags>> & {
    */
   wrapText?: boolean;
 };
+
+export type OptionsFlagSpacing = { start: number; end: number };
 
 // All these cases are exactly like they sound, except for "title". It's a faux titlecase format
 // in which the first letter of each word is capitalized.
