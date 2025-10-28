@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]
 ------------
 
+### Changed
+
+- Further optimized the size of the example image for the readme.
+
 ### Fixed
 
 - The output of `%CHOICES_AND%` and `%CHOICES_OR%` variables when there were two choices exactly.
