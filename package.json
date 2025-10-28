@@ -61,8 +61,7 @@
   "devDependencies": {
     "@eslint/compat": "^1.4.0",
     "@eslint/json": "^0.13.2",
-    "@eslint/markdown": "^7.4.0",
-    "@radham/eslint-config": "^8.0.0",
+    "@radham/eslint-config": "^8.1.0",
     "@types/node": "^22.18.8",
     "@vitest/coverage-v8": "^4.0.4",
     "duo-build": "^0.2.1",

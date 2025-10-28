@@ -1,7 +1,6 @@
 import { includeIgnoreFile } from '@eslint/compat';
 import json from '@eslint/json';
-import markdown from '@eslint/markdown';
-import radham from '@radham/eslint-config';
+import radham, { radhamGfm } from '@radham/eslint-config';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import path from 'node:path';
@@ -32,8 +31,6 @@ export default defineConfig([
   },
   {
     files: ['**/*.md'],
-    plugins: { markdown },
-    language: 'markdown/gfm',
-    extends: ['markdown/recommended']
+    extends: [radhamGfm]
   }
 ]);
