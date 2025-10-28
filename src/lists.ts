@@ -6,7 +6,7 @@ function maybeQuote(value: unknown): string {
     : String(value);
 }
 
-function getCommaSeparatedQuotedChoicesList(flag: Flag, conjunction: string) {
+function getCommaSeparatedQuotedChoicesList(flag: Flag, conjunction: string): string {
   if (!Array.isArray(flag.choices) || flag.choices.length === 0) {
     return '';
   }
@@ -15,10 +15,15 @@ function getCommaSeparatedQuotedChoicesList(flag: Flag, conjunction: string) {
     return maybeQuote(String(flag.choices.at(0)));
   }
 
-  const quotedChoices = flag.choices.map(String).map(maybeQuote);
-  const orPrefixedChoice = `${conjunction} ${quotedChoices.at(-1)}`;
+  const quotedChoices = flag.choices.map(maybeQuote);
 
-  return [...quotedChoices.slice(0, -1), orPrefixedChoice].join(', ');
+  if (flag.choices.length === 2) {
+    return quotedChoices.join(` ${conjunction} `);
+  }
+
+  const conjunctionPrefixedChoice = `${conjunction} ${quotedChoices.at(-1)}`;
+
+  return [...quotedChoices.slice(0, -1), conjunctionPrefixedChoice].join(', ');
 }
 
 export function getCommaSeparatedQuotedChoicesAndList(flag: Flag): string {
