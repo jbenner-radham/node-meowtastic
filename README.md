@@ -190,6 +190,9 @@ export type Theme = {
   // Markdown code spans in the app description or flag descriptions.
   code?: string;
 
+  // Commands displayed in the commands section.
+  command?: string | [string, TextCase];
+
   // Flags displayed in the options section.
   flag?: string;
 
@@ -226,6 +229,7 @@ import { type Theme, getHelpTextAndOptions } from 'meowtastic';
 const theme: Theme = {
   bin: 'bold.green',
   code: 'bold.yellow',
+  command: 'bold',
   flag: 'bold.blue',
   header: ['bold.underline.blue', 'upper'],
   option: 'bold.yellow',
