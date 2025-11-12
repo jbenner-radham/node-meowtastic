@@ -12,7 +12,7 @@ import {
   getCommaSeparatedQuotedChoicesOrList
 } from './lists.js';
 import styleCodeSpans from './style-code-spans.js';
-import type { Flag, Flags, OptionsFlagSpacing, Styler } from './types.js';
+import type { ColumnSpacing, Flag, Flags, Styler } from './types.js';
 import { wrapTextIntoLines } from './wrap-text.js';
 import decamelizeKeys from 'decamelize-keys';
 import { EOL } from 'node:os';
@@ -27,7 +27,7 @@ function getOptionsFlagUnstyledString(name: string, flag: Flag): string {
 
 function getOptionsFlagSpacing({ columnWidth, flag, name }: {
   columnWidth: number; flag: Flag; name: string;
-}): OptionsFlagSpacing {
+}): ColumnSpacing {
   const start = INDENT_SPACES_COUNT;
   const end = columnWidth - (start + getOptionsFlagUnstyledString(name, flag).length);
 
@@ -36,8 +36,8 @@ function getOptionsFlagSpacing({ columnWidth, flag, name }: {
 
 function getLongestFlagLength(flags: Flags): number {
   return Math.max(...Object.entries(flags).map(([name, flag]) =>
-    getOptionsFlagUnstyledString(name, flag).length)
-  );
+    getOptionsFlagUnstyledString(name, flag).length
+  ));
 }
 
 function getOptionsFlagColumn({

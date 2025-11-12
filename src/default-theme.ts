@@ -4,6 +4,7 @@ export default {
   argument: ['', 'upper'],
   bin: 'bold',
   code: 'bold',
+  command: 'bold',
   flag: 'bold',
   header: ['bold', 'title'],
   option: ['', 'upper'],

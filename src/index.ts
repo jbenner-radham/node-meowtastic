@@ -1,3 +1,4 @@
+import { getCommandsBody } from './commands.js';
 import {
   INDENT_SPACES_COUNT,
   MAX_COLUMNS_COUNT,
@@ -52,6 +53,7 @@ export function getHelpAndVersionFlags(): Flags {
 export function getHelpText(config: Config): string {
   const {
     arguments: args = [],
+    commands = {},
     includeOptionsArgument = true,
     packageOverrides,
     theme = getDefaultHelpTextTheme(),
@@ -139,6 +141,12 @@ export function getHelpText(config: Config): string {
     usageBody += ` ${styler.option('[OPTIONS]')}`;
   }
 
+  const hasCommands = Boolean(Object.keys(commands).length);
+
+  if (hasCommands) {
+    usageBody += ` ${styler.argument('<COMMAND>')}`;
+  }
+
   if (args.length) {
     const formattedArguments = args.map(arg =>
       arg.isRequired
@@ -149,6 +157,7 @@ export function getHelpText(config: Config): string {
   }
 
   const optionsBody = getOptionsBody({ flags: config.flags!, styler, wrapText });
+
   const helpLines = [
     styler.header('Usage'),
     usageBody,
@@ -156,6 +165,10 @@ export function getHelpText(config: Config): string {
     styler.header('Options'),
     optionsBody
   ];
+
+  if (hasCommands) {
+    helpLines.push('', styler.header('Commands'), getCommandsBody({ commands, styler, wrapText }));
+  }
 
   if (description.length) {
     helpLines.unshift(description, '');

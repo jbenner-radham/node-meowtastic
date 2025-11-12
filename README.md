@@ -121,6 +121,49 @@ meow(
 );
 ```
 
+Also, commands are supported:
+
+```typescript
+import meow from 'meow';
+import { type Config, getHelpTextAndOptions } from 'meowtastic';
+
+// Includes all the options that `meow` accepts.
+// See https://github.com/sindresorhus/meow#api for reference.
+const config: Config = {
+  commands: {
+    initialize: {
+      arguments: [{ name: 'file', isRequired: false }],
+      description: 'Initialize a new project.'
+    }
+  },
+  flags: {
+    example: {
+      default: 'this',
+      description: 'An example... yeah! Defaults to %DEFAULT%.',
+      shortFlag: 'e',
+      type: 'string'
+    },
+    codeSpans: {
+      description: 'Use `backticks` to format text.',
+      shortFlag: 'c',
+      type: 'boolean'
+    },
+    choices: {
+      description: 'A list of choices. Options are %CHOICES_AND%.',
+      shortFlag: 'C',
+      type: 'string',
+      choices: ['one', 'two', 'three']
+    }
+  },
+  importMeta: import.meta,
+  packageOverrides: {
+    bin: { meowtastic: 'path/to/bin' }
+  }
+};
+
+meow(...getHelpTextAndOptions(config));
+```
+
 See the "types" file (`src/types.ts` in the source distribution and `dist/types/types.d.ts` in the
 package distribution) for more information.
 

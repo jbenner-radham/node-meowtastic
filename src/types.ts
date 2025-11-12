@@ -12,6 +12,9 @@ export type AnyFlags = Record<string, AnyFlag>;
 export type Flag = Simplify<Writable<AnyFlag>> & { description?: string };
 export type Flags = Record<string, Flag>;
 
+export type Argument = { name: string; isRequired?: boolean };
+export type Commands = Record<string, { arguments?: Argument[]; description?: string }>;
+
 /**
  * The configuration for both `getHelpText` and `getHelpTextAndOptions`.
  *
@@ -23,7 +26,12 @@ export type Config = Writable<Options<Flags>> & {
   /**
    * The positional arguments of the app.
    */
-  arguments?: { name: string; isRequired?: boolean }[];
+  arguments?: Argument[];
+
+  /**
+   * The command arguments of the app.
+   */
+  commands?: Commands;
 
   /**
    * Whether to add a description and short flag to the help and version flags.
@@ -57,7 +65,7 @@ export type Config = Writable<Options<Flags>> & {
   wrapText?: boolean;
 };
 
-export type OptionsFlagSpacing = { start: number; end: number };
+export type ColumnSpacing = { start: number; end: number };
 
 // All these cases are exactly like they sound, except for "title". It's a faux titlecase format
 // in which the first letter of each word is capitalized.
@@ -76,6 +84,9 @@ export type Theme = {
   // Markdown code spans in the app description or flag descriptions.
   code?: string;
 
+  // Commands displayed in the commands section.
+  command?: string | [string, TextCase];
+
   // Flags displayed in the options section.
   flag?: string;
 
@@ -91,4 +102,4 @@ export type Theme = {
 
 export type Styler = Record<keyof Theme, (value: string) => string>;
 
-export type TextCaseThemeProperty = keyof Pick<Theme, 'argument' | 'header' | 'option'>;
+export type TextCaseThemeProperty = keyof Pick<Theme, 'argument' | 'command' | 'header' | 'option'>;
