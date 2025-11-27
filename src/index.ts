@@ -47,13 +47,15 @@ export function getHelpText(config: Config): string {
   const {
     arguments: args = [],
     commands = {},
+    flags,
+    importMeta,
     includeOptionsArgument = true,
     packageOverrides,
     theme = getDefaultHelpTextTheme(),
     wrapText = true
   } = config;
   const pkg = readPackageUpSync({
-    cwd: path.dirname(fileURLToPath(config.importMeta.url)),
+    cwd: path.dirname(fileURLToPath(importMeta.url)),
     normalize: false
   })?.packageJson ?? {};
 
@@ -119,15 +121,15 @@ export function getHelpText(config: Config): string {
   }
 
   if (args.length) {
-    const formattedArguments = args.map(arg =>
-      arg.isRequired
-        ? styler.argument(`<${arg.name}>`)
-        : styler.option(`[${arg.name}]`)
+    const formattedArguments = args.map(argument =>
+      argument.isRequired
+        ? styler.argument(`<${argument.name}>`)
+        : styler.option(`[${argument.name}]`)
     );
     usageBody += ` ${formattedArguments.join(' ')}`;
   }
 
-  const optionsBody = getOptionsBody({ flags: config.flags!, styler, wrapText });
+  const optionsBody = getOptionsBody({ flags: flags!, styler, wrapText });
 
   const helpLines = [
     styler.header('Usage'),
@@ -145,12 +147,12 @@ export function getHelpText(config: Config): string {
 }
 
 export function getHelpTextAndOptions(config: Config): [string, Options<AnyFlags>] {
-  const { augmentHelpAndVersionFlags = true } = config;
+  const { augmentHelpAndVersionFlags = true, flags } = config;
 
   if (augmentHelpAndVersionFlags) {
     (config as Writable<Config>).flags = {
       ...getHelpAndVersionFlags(),
-      ...config.flags
+      ...flags
     };
   }
 

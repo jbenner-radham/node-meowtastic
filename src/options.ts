@@ -138,7 +138,7 @@ export function getOptionsBody({
     INDENT_SPACES_COUNT + longestFlagLength + OPTIONS_SECTION_INNER_PADDING_SPACES_COUNT;
   const descriptionColumnWidth = MAX_COLUMNS_COUNT - flagColumnWidth;
   const lines = Object.entries(normalizedFlags)
-    .sort((a, b) =>
+    .toSorted((a, b) =>
       (a.at(0) as string).localeCompare(b.at(0) as string))
     .reduce((accumulator, [name, flag]) => {
       const lines = getOptionsFlagLines({

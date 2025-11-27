@@ -128,7 +128,7 @@ export function getCommandsBody({
   const commandColumnWidth = INDENT_SPACES_COUNT + longestCommandLength + INDENT_SPACES_COUNT;
   const descriptionColumnWidth = MAX_COLUMNS_COUNT - commandColumnWidth;
   const lines = Object.entries(commands)
-    .sort((a, b) =>
+    .toSorted((a, b) =>
       (a.at(0) as string).localeCompare(b.at(0) as string))
     .reduce((accumulator, [command, meta]) => {
       const lines = getCommandLines({
