@@ -63,7 +63,7 @@
     "@eslint/json": "^0.14.0",
     "@radham/eslint-config": "^11.0.0",
     "@types/node": "^22.18.8",
-    "@vitest/coverage-v8": "^4.0.4",
+    "@vitest/coverage-v8": "^4.0.14",
     "duo-build": "^0.2.1",
     "eslint": "^9.39.1",
     "globals": "^16.4.0",
@@ -75,7 +75,7 @@
     "tsx": "^4.20.6",
     "type-fest": "^5.1.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.4"
+    "vitest": "^4.0.14"
   },
   "packageManager": "pnpm@10.19.0",
   "engines": {
