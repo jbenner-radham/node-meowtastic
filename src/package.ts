@@ -21,7 +21,3 @@ export function getPackageBin(pkg: PackageJson): string {
 
   return '';
 }
-
-export function getPackageDescription(pkg: PackageJson): string {
-  return pkg.description ?? '';
-}

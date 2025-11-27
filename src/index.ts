@@ -1,14 +1,8 @@
 import { getCommandsBody } from './commands.js';
-import {
-  INDENT_SPACES_COUNT,
-  MAX_COLUMNS_COUNT,
-  NO_COLOR,
-  TEXT_CASE_THEME_PROPERTIES
-} from './constants.js';
+import { INDENT_SPACES_COUNT, NO_COLOR, TEXT_CASE_THEME_PROPERTIES } from './constants.js';
 import defaultTheme from './default-theme.js';
 import { getOptionsBody } from './options.js';
-import { getPackageBin, getPackageDescription } from './package.js';
-import styleCodeSpans from './style-code-spans.js';
+import { getPackageBin } from './package.js';
 import type {
   AnyFlags,
   Config,
@@ -19,7 +13,6 @@ import type {
   TextCaseThemeProperty,
   Theme
 } from './types.js';
-import { wrapTextIntoLines } from './wrap-text.js';
 import chalkPipe from 'chalk-pipe';
 import decamelize from 'decamelize';
 import type { Options } from 'meow';
@@ -112,28 +105,6 @@ export function getHelpText(config: Config): string {
     };
   }, {} as Styler);
 
-  const getDescription = ({ description }: Config): string => {
-    if (typeof description === 'string') {
-      const lines = wrapText
-        ? wrapTextIntoLines({ columnWidth: MAX_COLUMNS_COUNT, text: description })
-        : [description];
-
-      return lines.map(line => styleCodeSpans(line, styler)).join(EOL);
-    }
-
-    if (typeof description === 'undefined') {
-      const lines = wrapText
-        ? wrapTextIntoLines({ columnWidth: MAX_COLUMNS_COUNT, text: getPackageDescription(pkg) })
-        : [getPackageDescription(pkg)];
-
-      return lines.map(line => styleCodeSpans(line, styler)).join(EOL);
-    }
-
-    return '';
-  };
-
-  const description = getDescription(config);
-
   let usageBody = ' '.repeat(INDENT_SPACES_COUNT) +
     `${styler.promptSymbol('$')} ${styler.bin(bin)}`;
 
@@ -170,15 +141,11 @@ export function getHelpText(config: Config): string {
     helpLines.push('', styler.header('Commands'), getCommandsBody({ commands, styler, wrapText }));
   }
 
-  if (description.length) {
-    helpLines.unshift(description, '');
-  }
-
   return helpLines.join(EOL);
 }
 
 export function getHelpTextAndOptions(config: Config): [string, Options<AnyFlags>] {
-  const { augmentHelpAndVersionFlags = true, description } = config;
+  const { augmentHelpAndVersionFlags = true } = config;
 
   if (augmentHelpAndVersionFlags) {
     (config as Writable<Config>).flags = {
@@ -203,7 +170,7 @@ export function getHelpTextAndOptions(config: Config): [string, Options<AnyFlags
     }
 
     return accumulator;
-  }, (description !== false ? { description: false } : {}) as Options<AnyFlags>);
+  }, {} as Options<AnyFlags>);
 
   return [helpText, options];
 }
